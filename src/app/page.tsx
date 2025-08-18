@@ -1,9 +1,12 @@
-import Header from '../components/Header'
-import HeroSlider from '../components/HeroSlider'
-import ServiceCategoryCarousel from '../components/ServiceCategoryCarousel'
-import FeaturesSection from '../components/FeaturesSection'
-import Testimonials from '../components/Testimonials'
-import Footer from '../components/Footer'
+import Header from '../components/Includes/Header'
+import HeroSlider from '../components/Home/HeroSlider'
+import HowItWorks from '../components/Home/HowItWorks'
+import ServiceCategoryCarousel from '../components/Home/ServiceCategoryCarousel'
+import TrendingServices from '../components/Home/TrendingServices'
+import FeaturesSection from '../components/Home/FeaturesSection'
+import Testimonials from '../components/Home/Testimonials'
+import AppDownloadSection from '../components/Home/AppDownloadSection'
+import Footer from '../components/Includes/Footer'
 
 export default function Home() {
   return (
@@ -12,8 +15,11 @@ export default function Home() {
       <main>
         <HeroSlider />
         <ServiceCategoryCarousel />
+        <TrendingServices />
         <FeaturesSection />
+        <HowItWorks />
         <Testimonials />
+        <AppDownloadSection />
       </main>
       <Footer />
     </div>
