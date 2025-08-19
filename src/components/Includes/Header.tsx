@@ -3,13 +3,32 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useState, useEffect, useRef } from 'react';
+import { usePathname } from 'next/navigation';
 import SearchInput from '@/components/Home/SearchInput';
 import debounce from 'lodash.debounce';
 
 export default function Header() {
+  const pathname = usePathname();
+  const [showSearch, setShowSearch] = useState(pathname !== '/');
   const [isScrolled, setIsScrolled] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const heroSectionRef = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    if (pathname === '/') {
+      heroSectionRef.current = document.getElementById('hero-section');
+      const handleScroll = debounce(() => {
+        if (heroSectionRef.current) {
+          const heroBottom = heroSectionRef.current.getBoundingClientRect().bottom;
+          setShowSearch(heroBottom <= 100); // Show search when hero bottom reaches 100px from top
+        }
+      }, 100);
+
+      window.addEventListener('scroll', handleScroll);
+      return () => window.removeEventListener('scroll', handleScroll);
+    }
+  }, [pathname]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -24,7 +43,7 @@ export default function Header() {
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
+      setIsScrolled(window.scrollY > 40);
     };
     const debouncedScroll = debounce(handleScroll, 20);
     window.addEventListener('scroll', debouncedScroll);
@@ -39,9 +58,9 @@ export default function Header() {
             <Image src="/logo.png" width={148} height={38} alt="Gen21 Logo" />
           </Link>
 
-          <div className={`flex-1 max-w-xl mx-8 hidden md:block transition-all duration-300 ${
-            isScrolled ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2'
-          }`}>
+<div className={`flex-1 max-w-xl mx-8 hidden md:block transition-all duration-300 ${
+  pathname !== '/' ? 'opacity-100 translate-y-0' : (showSearch ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2')
+}`}>
             <SearchInput />
           </div>
           
@@ -101,6 +120,8 @@ export default function Header() {
           </button>
         </div>
       </nav>
+
+      {/* Search Input - Show always on non-home pages, show on home page after scroll */}
     </header>
   );
 }

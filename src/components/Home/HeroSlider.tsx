@@ -5,7 +5,7 @@ import SearchInput from './SearchInput';
 
 export default function HeroSlider() {
   return (
-    <div className="relative h-[500px]">
+    <div id="hero-section" className="relative h-[500px]">
       <div className="absolute inset-0 overflow-hidden">
         <Image
           src="/home-service.jpg"
