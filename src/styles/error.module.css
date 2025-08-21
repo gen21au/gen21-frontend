@@ -1,0 +1,72 @@
+.errorContainer {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.errorBanner {
+  flex: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), 
+              url('/images/404-error.png');
+  background-size: cover;
+  background-position: center;
+  text-align: center;
+  color: white;
+  padding: 2rem;
+  max-height: 90vh;
+}
+
+.errorCode {
+  font-size: 8rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  line-height: 1;
+}
+
+.errorDescription {
+  max-width: 600px;
+  margin: 0 auto 2rem;
+  font-size: 1.1rem;
+}
+
+.homeLink {
+  display: inline-block;
+  padding: 1rem 2rem;
+  border: 1px solid var(--primary-color);
+  border-radius: 4px;
+  color: var(--primary-color);
+  text-decoration: none;
+  font-weight: 600;
+  background: transparent;
+  transition: all 0.3s ease;
+}
+
+.homeLink:hover {
+  color: var(--secondary-color);
+  border-color: var(--secondary-color);
+}
+
+@media (max-width: 768px) {
+  .errorBanner {
+    max-height: none;
+    background-size: contain;
+    background-position: top center;
+    padding: 1rem;
+    align-items: flex-start;
+    padding-top: 4rem;
+  }
+
+  .errorCode {
+    font-size: 5rem;
+  }
+}
+
+@media (min-width: 1200px) {
+  .errorBanner {
+    max-height: 80vh;
+  }
+}
