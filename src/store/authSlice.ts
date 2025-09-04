@@ -43,13 +43,6 @@ export const authSlice = createApi({
         body: { token, password },
       }),
     }),
-    refreshToken: builder.mutation<AuthResponse, { refreshToken: string }>({
-      query: ({ refreshToken }) => ({
-        url: '/auth/refresh',
-        method: 'POST',
-        body: { refreshToken },
-      }),
-    }),
     validateToken: builder.query<User, void>({
       query: () => '/',
     }),
@@ -62,6 +55,5 @@ export const {
   useRegisterMutation,
   useForgotPasswordMutation,
   useResetPasswordMutation,
-  useRefreshTokenMutation,
   useValidateTokenQuery,
  } = authSlice;
