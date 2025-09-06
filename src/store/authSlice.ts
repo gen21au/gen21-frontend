@@ -1,59 +1,97 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { AuthResponse, ForgotPasswordRequest, LoginRequest, RegisterRequest, ResetPasswordRequest, User } from '@/types/auth';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { TokenManager } from '@/utils/tokenManager';
 
-const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://gen21api.test/api';
+interface User {
+  id: number;
+  name: string;
+  email: string;
+  role: string;
+}
 
+interface AuthState {
+  user: User | null;
+  accessToken: string | null;
+  isAuthenticated: boolean;
+}
 
-export const authSlice = createApi({
-  reducerPath: "auth",
-  baseQuery: fetchBaseQuery({
-    baseUrl: baseUrl,
-    prepareHeaders: (headers, { getState }) => {
-      const token = (getState() as any).auth?.accessToken;
-      if (token) headers.set('Authorization', `Bearer ${token}`);
-      return headers;
-    }
-  }),
-  endpoints: (builder) => ({
-    login: builder.mutation<AuthResponse, LoginRequest>({
-      query: (credentials) => ({
-        url: API_ENDPOINDS.LOGIN,
-        method: 'POST',
-        body: credentials,
-      }),
-    }),
-    register: builder.mutation<AuthResponse, RegisterRequest>({
-      query: (data) => ({
-        url: API_ENDPOINDS.REGISTER,
-        method: 'POST',
-        body: data,
-      }),
-    }),
-    forgotPassword: builder.mutation<{ message: string }, ForgotPasswordRequest>({
-      query: (body) => ({
-        url: API_ENDPOINDS.FORGOT_PASSWORD,
-        method: 'POST',
-        body,
-      }),
-    }),
-    resetPassword: builder.mutation<{ message: string }, ResetPasswordRequest>({
-      query: ({ token, password }) => ({
-        url: '/auth/reset-password',
-        method: 'POST',
-        body: { token, password },
-      }),
-    }),
-    validateToken: builder.query<User, void>({
-      query: () => '/',
-    }),
+// Initialize state from localStorage if available
+const getInitialState = async (): Promise<AuthState> => {
+  if (typeof window !== 'undefined') {
+    const user = TokenManager.getUser();
+    const accessToken = TokenManager.getAccessToken();
     
-  }),
+    if (user && accessToken) {
+      // Validate token asynchronously
+      const isValid = await TokenManager.isAuthenticated();
+      return {
+        user,
+        accessToken,
+        isAuthenticated: isValid,
+      };
+    }
+  }
+  
+  return {
+    user: null,
+    accessToken: null,
+    isAuthenticated: false,
+  };
+};
+
+const initialState: AuthState = {
+  user: null,
+  accessToken: null,
+  isAuthenticated: false,
+};
+
+const authSlice = createSlice({
+  name: 'auth',
+  initialState,
+  reducers: {
+    setCredentials: (state, action: PayloadAction<AuthState>) => {
+      state.user = action.payload.user;
+      state.accessToken = action.payload.accessToken;
+      state.isAuthenticated = true;
+      
+      // Store tokens in TokenManager
+      if (action.payload.accessToken && action.payload.user) {
+        TokenManager.setTokens(
+          action.payload.accessToken,
+          action.payload.user
+        );
+      }
+    },
+    logout: (state) => {
+      state.user = null;
+      state.accessToken = null;
+      state.isAuthenticated = false;
+      
+      // Clear tokens from TokenManager
+      TokenManager.clearTokens();
+    },
+    updateTokens: (state, action: PayloadAction<{ accessToken: string; refreshToken: string }>) => {
+      state.accessToken = action.payload.accessToken;
+      
+      // Update tokens in TokenManager
+      if (state.user) {
+        TokenManager.setTokens(
+          action.payload.accessToken,
+          state.user
+        );
+      }
+    },
+    updateUser: (state, action: PayloadAction<User>) => {
+      state.user = action.payload;
+      // Update user in TokenManager
+      if (state.accessToken) {
+        TokenManager.setTokens(
+          state.accessToken,
+          action.payload
+        );
+      }
+    },
+  },
 });
 
-export const { 
-  useLoginMutation,
-  useRegisterMutation,
-  useForgotPasswordMutation,
-  useResetPasswordMutation,
-  useValidateTokenQuery,
- } = authSlice;
+export const { setCredentials, logout, updateTokens, updateUser } = authSlice.actions;
+export default authSlice.reducer;

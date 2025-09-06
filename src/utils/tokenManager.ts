@@ -5,7 +5,7 @@ export class TokenManager {
   private static readonly USER_KEY = 'user';
 
   // Set tokens in both cookies and localStorage
-  static setTokens(accessToken: string, refreshToken: string, user: any) {
+  static setTokens(accessToken: string, user: any) {
     // Set in localStorage for client-side access
     localStorage.setItem(this.ACCESS_TOKEN_KEY, accessToken);
     localStorage.setItem(this.USER_KEY, JSON.stringify(user));

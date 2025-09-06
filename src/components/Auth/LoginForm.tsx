@@ -1,35 +1,40 @@
 'use client';
 
-import { useState } from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useLoginMutation } from '@/store/apiSlice';
+import { useDispatch } from 'react-redux';
+import { setCredentials } from '@/store/authSlice';
 
 export default function LoginForm() {
-  const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-    rememberMe: false
-  });
-  const [isLoading, setIsLoading] = useState(false);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value, type, checked } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: type === 'checkbox' ? checked : value
-    }));
-  };
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const [login, { isLoading, error }] = useLoginMutation();
+  const dispatch = useDispatch();
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
-
-    // Simulate API call
-    setTimeout(() => {
-      setIsLoading(false);
-      // Handle login logic here
-      console.log('Login attempt:', formData);
-    }, 2000);
+    try {
+      const userData = await login({ email, password }).unwrap();
+      dispatch(setCredentials({
+        user: {
+          id: userData.data.id,
+          name: userData.data.name,
+          email: userData.data.email,
+          role: userData.data.role.name,
+        },
+        accessToken: userData.data.api_token,
+        isAuthenticated: true,
+      }));
+      // redirect to dashboard after successful login
+      window.location.href = '/dashboard';
+    } catch (err) {
+      console.error('Login failed', err);
+    }
   };
 
   return (
@@ -69,8 +74,8 @@ export default function LoginForm() {
                   type="email"
                   autoComplete="email"
                   required
-                  value={formData.email}
-                  onChange={handleInputChange}
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-gray-900 placeholder-gray-500"
                   placeholder="Enter your email"
                 />
@@ -92,8 +97,8 @@ export default function LoginForm() {
                   type="password"
                   autoComplete="current-password"
                   required
-                  value={formData.password}
-                  onChange={handleInputChange}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-gray-900 placeholder-gray-500"
                   placeholder="Enter your password"
                 />
@@ -105,7 +110,7 @@ export default function LoginForm() {
 
             {/* Remember Me & Forgot Password */}
             <div className="flex items-center justify-between">
-              <div className="flex items-center">
+              {/* <div className="flex items-center">
                 <input
                   id="rememberMe"
                   name="rememberMe"
@@ -117,7 +122,7 @@ export default function LoginForm() {
                 <label htmlFor="rememberMe" className="ml-2 block text-sm text-gray-700">
                   Remember me
                 </label>
-              </div>
+              </div> */}
               <Link
                 href="/forgot-password"
                 className="text-sm text-blue-600 hover:text-blue-500 font-medium"

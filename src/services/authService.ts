@@ -7,7 +7,7 @@ export class AuthService {
   // Login user
   static async login(email: string, password: string) {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/login`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}${API_ENDPOINDS.LOGIN}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -25,7 +25,6 @@ export class AuthService {
       store.dispatch(setCredentials({
         user: data.user,
         accessToken: data.accessToken,
-        refreshToken: data.refreshToken,
         isAuthenticated: true,
       }));
 
@@ -38,35 +37,6 @@ export class AuthService {
   // Logout user
   static logout() {
     store.dispatch(logout());
-  }
-
-  // Refresh token
-  static async refreshToken(refreshToken: string) {
-    try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/refresh`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ refreshToken }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Token refresh failed');
-      }
-
-      const data = await response.json();
-      
-      // Update tokens in store
-      store.dispatch(updateTokens({
-        accessToken: data.accessToken,
-        refreshToken: data.refreshToken,
-      }));
-
-      return data;
-    } catch (error) {
-      throw error;
-    }
   }
 
   // Check if user is authenticated (async)
@@ -108,7 +78,6 @@ export class AuthService {
   static async initializeAuth(): Promise<boolean> {
     const user = TokenManager.getUser();
     const accessToken = TokenManager.getAccessToken();
-    const refreshToken = TokenManager.getRefreshToken();
     
     if (user && accessToken) {
       const isValid = await TokenValidation.isTokenValid(accessToken);
@@ -116,7 +85,6 @@ export class AuthService {
         store.dispatch(setCredentials({
           user,
           accessToken,
-          refreshToken,
           isAuthenticated: true,
         }));
         return true;
@@ -145,13 +113,18 @@ export class AuthService {
   static async validateAndUpdateUser(): Promise<boolean> {
     const token = this.getAccessToken();
     if (!token) return false;
-    
+
     const validationResult = await TokenValidation.validateToken(token);
     if (validationResult.isValid && validationResult.user) {
-      store.dispatch(updateUser(validationResult.user));
+      // Convert id from string to number to match the expected User type
+      const userWithNumberId = {
+        ...validationResult.user,
+        id: parseInt(validationResult.user.id, 10)
+      };
+      store.dispatch(updateUser(userWithNumberId));
       return true;
     }
-    
+
     return false;
   }
-} 
+}
