@@ -1,13 +1,50 @@
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { store } from '@/store/store';
+import type { RootState } from '@/store/store';
 import { setCredentials, logout, updateTokens, updateUser } from '@/store/authSlice';
 import { TokenManager } from '@/utils/tokenManager';
 import { TokenValidation } from '@/utils/tokenValidation';
+import { API_ENDPOINTS } from '@/utils/api_endpoints';
+
+// Create API slice
+export const authApi = createApi({
+  reducerPath: 'authApi',
+  baseQuery: fetchBaseQuery({ 
+    baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL || 'http://gen21api.test/api',
+  prepareHeaders: (headers) => {
+    const token = store.getState().auth.accessToken;
+    // if (token) {
+    //   headers.set('Authorization', `Bearer ${token}`);
+    // }
+    return headers;
+  }
+  }),
+  endpoints: (builder) => ({
+    login: builder.mutation({
+      query: (credentials) => ({
+        url: API_ENDPOINTS.LOGIN,
+        method: 'POST',
+        body: credentials
+      })
+    }),
+    register: builder.mutation({
+      query: (userData) => ({
+        url: API_ENDPOINTS.REGISTER,
+        method: 'POST',
+        body: userData
+      })
+    })
+  })
+});
+
+// Export hooks for usage in components
+export const { useLoginMutation, useRegisterMutation } = authApi;
 
 export class AuthService {
   // Login user
   static async login(email: string, password: string) {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}${API_ENDPOINDS.LOGIN}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}${API_ENDPOINTS.LOGIN}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { useLoginMutation } from '@/store/apiSlice';
 import { useDispatch } from 'react-redux';
 import { setCredentials } from '@/store/authSlice';
+import toast from 'react-hot-toast';
 
 export default function LoginForm() {
 
@@ -20,20 +21,25 @@ export default function LoginForm() {
     e.preventDefault();
     try {
       const userData = await login({ email, password }).unwrap();
-      dispatch(setCredentials({
-        user: {
-          id: userData.data.id,
-          name: userData.data.name,
-          email: userData.data.email,
-          role: userData.data.role.name,
-        },
-        accessToken: userData.data.api_token,
-        isAuthenticated: true,
-      }));
-      // redirect to dashboard after successful login
-      window.location.href = '/dashboard';
+      if (userData.success) {
+        dispatch(setCredentials({
+          user: {
+            id: userData.data.id,
+            name: userData.data.name,
+            email: userData.data.email,
+            role: userData.data.role.name,
+          },
+          accessToken: userData.data.api_token,
+          isAuthenticated: true,
+        }));
+        // redirect to dashboard after successful login
+        window.location.href = '/';
+      } else {
+        // show toaster message
+        toast.error(userData?.message ?? 'These credentials do not match our records!')
+      }
     } catch (err) {
-      console.error('Login failed', err);
+      toast.error('Login failed. Please check your credentials');
     }
   };
 

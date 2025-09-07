@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { AuthResponse, ForgotPasswordRequest, LoginRequest, RegisterRequest, ResetPasswordRequest, User } from '@/types/auth';
+import { API_ENDPOINTS } from "@/utils/api_endpoints";
 
 const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://gen21api.test/api';
 
@@ -17,28 +18,28 @@ export const apiSlice = createApi({
   endpoints: (builder) => ({
     login: builder.mutation<AuthResponse, LoginRequest>({
       query: (credentials) => ({
-        url: API_ENDPOINDS.LOGIN,
+        url: API_ENDPOINTS.LOGIN,
         method: 'POST',
         body: credentials,
       }),
     }),
     register: builder.mutation<AuthResponse, RegisterRequest>({
       query: (data) => ({
-        url: API_ENDPOINDS.REGISTER,
+        url: API_ENDPOINTS.REGISTER,
         method: 'POST',
         body: data,
       }),
     }),
     forgotPassword: builder.mutation<{ message: string }, ForgotPasswordRequest>({
       query: (body) => ({
-        url: API_ENDPOINDS.FORGOT_PASSWORD,
+        url: API_ENDPOINTS.FORGOT_PASSWORD,
         method: 'POST',
         body,
       }),
     }),
     resetPassword: builder.mutation<{ message: string }, ResetPasswordRequest>({
       query: ({ token, password }) => ({
-        url: '/auth/reset-password',
+        url: API_ENDPOINTS.RESET_PASSWORD,
         method: 'POST',
         body: { token, password },
       }),

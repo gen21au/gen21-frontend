@@ -1,6 +1,10 @@
 'use client';
 
 import { useState } from 'react';
+import { useRegisterMutation } from '@/services/authService';
+import { useDispatch } from 'react-redux';
+import { setCredentials } from '@/store/authSlice';
+import toast from 'react-hot-toast';
 import Link from 'next/link';
 import Image from 'next/image';
 
@@ -9,13 +13,16 @@ export default function RegisterForm() {
     firstName: '',
     lastName: '',
     email: '',
-    phone: '',
+    phone_number: '',
     password: '',
     confirmPassword: '',
     agreeToTerms: false
   });
   const [isLoading, setIsLoading] = useState(false);
   const [passwordError, setPasswordError] = useState('');
+  const [formErrors, setFormErrors] = useState<Record<string, string>>({});
+  const [registerUser] = useRegisterMutation();
+  const dispatch = useDispatch();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
@@ -31,15 +38,21 @@ export default function RegisterForm() {
   };
 
   const validatePasswords = () => {
+    let isValid = true;
+    const errors: Record<string, string> = {};
+
     if (formData.password !== formData.confirmPassword) {
-      setPasswordError('Passwords do not match');
-      return false;
+      errors.confirmPassword = 'Passwords do not match';
+      isValid = false;
     }
     if (formData.password.length < 8) {
-      setPasswordError('Password must be at least 8 characters long');
-      return false;
+      errors.password = 'Password must be at least 8 characters long';
+      isValid = false;
     }
-    return true;
+    
+    setPasswordError(errors.confirmPassword || errors.password || '');
+    setFormErrors(errors);
+    return isValid;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -50,18 +63,41 @@ export default function RegisterForm() {
     }
 
     if (!formData.agreeToTerms) {
-      alert('Please agree to the terms and conditions');
+      setFormErrors(prev => ({ ...prev, terms: 'Please agree to the terms and conditions' }));
       return;
     }
 
     setIsLoading(true);
 
-    // Simulate API call
-    setTimeout(() => {
+    try {
+      const userData = await registerUser({
+        name: `${formData.firstName} ${formData.lastName}`,
+        email: formData.email,
+        phone_number: formData.phone_number,
+        password: formData.password
+      }).unwrap();
+
+      dispatch(setCredentials({
+        user: {
+          id: userData.data.id,
+          name: `${userData.data.firstName} ${userData.data.lastName}`,
+          email: userData.data.email,
+          role: userData.data.role?.name || 'user',
+        },
+        accessToken: userData.data.api_token,
+        isAuthenticated: true,
+      }));
+      
+      toast.success('Registration successful! Redirecting...');
+      setTimeout(() => {
+        window.location.href = '/';
+      }, 2000);
+      
+    } catch (err) {
+      toast.error('Registration failed. Please try again');
+    } finally {
       setIsLoading(false);
-      // Handle registration logic here
-      console.log('Registration attempt:', formData);
-    }, 2000);
+    }
   };
 
   return (
@@ -150,17 +186,17 @@ export default function RegisterForm() {
 
             {/* Phone Field */}
             <div>
-              <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="phone_number" className="block text-sm font-medium text-gray-700 mb-2">
                 Phone Number
               </label>
               <div className="relative">
                 <input
-                  id="phone"
-                  name="phone"
+                  id="phone_number"
+                  name="phone_number"
                   type="tel"
                   autoComplete="tel"
                   required
-                  value={formData.phone}
+                  value={formData.phone_number}
                   onChange={handleInputChange}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-gray-900 placeholder-gray-500"
                   placeholder="+880 1XX XXX XXXX"
@@ -217,13 +253,19 @@ export default function RegisterForm() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                 </svg>
               </div>
-              {passwordError && (
-                <p className="mt-1 text-sm text-red-600">{passwordError}</p>
+              {(formErrors.confirmPassword || formErrors.password) && (
+                <p className="mt-1 text-sm text-red-600">
+                  {formErrors.confirmPassword || formErrors.password}
+                </p>
               )}
             </div>
 
+
             {/* Terms and Conditions */}
             <div className="flex items-start">
+              {formErrors.terms && (
+                <p className="text-sm text-red-600 mb-2">{formErrors.terms}</p>
+              )}
               <input
                 id="agreeToTerms"
                 name="agreeToTerms"
