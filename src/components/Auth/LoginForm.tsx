@@ -16,18 +16,19 @@ export default function LoginForm() {
   const [login, { isLoading, error }] = useLoginMutation();
   const dispatch = useDispatch();
 
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       const userData = await login({ email, password }).unwrap();
+      console.log(userData);
+      
       if (userData.success) {
         dispatch(setCredentials({
           user: {
             id: userData.data.id,
             name: userData.data.name,
             email: userData.data.email,
-            role: userData.data.role.name,
+            role: userData.data.roles && userData.data.roles.length > 0 ? userData.data.roles[0].name : 'user',
           },
           accessToken: userData.data.api_token,
           isAuthenticated: true,

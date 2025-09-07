@@ -7,11 +7,11 @@ export interface AuthResponse {
         email: string; 
         phone_number: string;
         api_token: string;
-        role: {
+        roles: [{
             id: number;
             name: string;
             guard_name: string;
-        };
+        }];
     }
 }
   
@@ -21,10 +21,11 @@ export interface LoginRequest {
 }
 
 export interface User {
-    id: string;
-    name: string;
-    email: string;
-    role: string;
+  id: number;
+  name: string;
+  email: string;
+  role: string;
+  avatar?: string;
 }
 
   

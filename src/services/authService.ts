@@ -1,6 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { store } from '@/store/store';
-import type { RootState } from '@/store/store';
 import { setCredentials, logout, updateTokens, updateUser } from '@/store/authSlice';
 import { TokenManager } from '@/utils/tokenManager';
 import { TokenValidation } from '@/utils/tokenValidation';
