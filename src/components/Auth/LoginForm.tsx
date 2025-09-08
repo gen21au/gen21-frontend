@@ -7,6 +7,7 @@ import { useLoginMutation } from '@/store/apiSlice';
 import { useDispatch } from 'react-redux';
 import { setCredentials } from '@/store/authSlice';
 import toast from 'react-hot-toast';
+import { getMediaUrl } from '@/helper/media.helper';
 
 export default function LoginForm() {
 
@@ -29,6 +30,7 @@ export default function LoginForm() {
             name: userData.data.name,
             email: userData.data.email,
             role: userData.data.roles && userData.data.roles.length > 0 ? userData.data.roles[0].name : 'user',
+            avatarUrl: getMediaUrl(userData.data, "avatar", "thumb", "/avatar.png"),
           },
           accessToken: userData.data.api_token,
           isAuthenticated: true,

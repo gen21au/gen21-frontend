@@ -110,7 +110,7 @@ export default function Header() {
                   className="flex items-center focus:outline-none"
                 >
                   <img 
-                    src={user?.avatar || '/avatar.png'} 
+                    src={user?.avatarUrl || '/avatar.png'} 
                     alt="User avatar" 
                     className="w-10 h-10 rounded-full border-2 border-gray-200"
                   />
