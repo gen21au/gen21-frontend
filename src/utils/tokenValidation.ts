@@ -1,8 +1,11 @@
+import { API_ENDPOINTS } from "./api_endpoints";
+
 interface User {
   id: string;
   name: string;
   email: string;
   role: string;
+  avatarUrl: string;
 }
 
 interface TokenValidationResult {
@@ -18,7 +21,7 @@ export class TokenValidation {
     }
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}${API_ENDPOINDS.USER_PROFILE}?token=${token}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}${API_ENDPOINTS.USER_PROFILE}?token=${token}`, {
         method: 'GET',
         // headers: {
         //   'Authorization': `Bearer ${token}`,

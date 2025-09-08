@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useRegisterMutation } from '@/services/authService';
+import { useRegisterMutation } from '@/store/apiSlice';
 import { useDispatch } from 'react-redux';
 import { setCredentials } from '@/store/authSlice';
 import toast from 'react-hot-toast';
@@ -80,9 +80,10 @@ export default function RegisterForm() {
       dispatch(setCredentials({
         user: {
           id: userData.data.id,
-          name: `${userData.data.firstName} ${userData.data.lastName}`,
+          name: userData.data.name, // Use userData.data.name directly
           email: userData.data.email,
-          role: userData.data.role?.name || 'user',
+          role: userData.data.roles[0]?.name || 'customer', // Access role from roles array
+          avatarUrl: 'avatar.png',
         },
         accessToken: userData.data.api_token,
         isAuthenticated: true,

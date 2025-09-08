@@ -2,23 +2,23 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { RootState } from '@/store/store';
-import { logout } from '@/store/authSlice';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
 import SearchInput from '@/components/Home/SearchInput';
 import debounce from 'lodash.debounce';
+import { AuthService } from '@/services/authService';
 
 export default function Header() {
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   const router = useRouter();
   const { isAuthenticated, user } = useSelector((state: RootState) => state.auth);
   const pathname = usePathname();
   
   const handleLogout = () => {
-    dispatch(logout());
+    AuthService.logout();
     router.push('/login');
     setIsDropdownOpen(false);
   };

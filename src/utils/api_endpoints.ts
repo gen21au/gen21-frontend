@@ -1,12 +1,15 @@
+export const BASE_API_URL = process.env.NEXT_PUBLIC_BASE_API_URL || 'http://gen21api.test/api';
+
 export const API_ENDPOINTS = {
     //Auth
-    LOGIN: '/login/2',
-    REGISTER: '/register/2',
-    FORGOT_PASSWORD: '/forgot-password/2',
-    RESET_PASSWORD: '/send_reset_link_email/2',
+    LOGIN: '/login?version=2',
+    REGISTER: '/register?version=2',
+    FORGOT_PASSWORD: '/forgot-password?version=2',
+    RESET_PASSWORD: '/send_reset_link_email?version=2',
     USER_PROFILE: '/user',
-    LOGOUT: 'logout/2',
+    LOGOUT: '/logout?version=2',
 
     //Home page APIs
-    FEATURE_SERVICES: 'feature_e_services/2/',
+    FEATURE_SERVICES: '/feature_e_services?version=2/',
+    
 }

@@ -32,6 +32,7 @@ export interface User {
 export interface RegisterRequest {
   name: string;
   email: string;
+  phone_number: string;
   password: string;
 }
   
@@ -42,4 +43,10 @@ export interface ForgotPasswordRequest {
 export interface ResetPasswordRequest {
   token: string;
   password: string;
+}
+
+export interface LogoutResponse {
+  success: boolean;
+  data: string;
+  message: string;
 }
