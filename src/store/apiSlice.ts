@@ -16,6 +16,15 @@ export const apiSlice = createApi({
     }
   }),
   endpoints: (builder) => ({
+    // Feature Services endpoint
+    getFeatureServices: builder.query<any, void>({
+      query: () => API_ENDPOINTS.FEATURE_SERVICES,
+      transformResponse: (response: { data: Array<{ 
+        id: number
+        name: { en: string }
+        media: Array<{ url: string }>
+      }> }) => response.data,
+    }),
     login: builder.mutation<AuthResponse, LoginRequest>({
       query: (credentials) => ({
         url: API_ENDPOINTS.LOGIN,
@@ -57,4 +66,5 @@ export const {
   useForgotPasswordMutation,
   useResetPasswordMutation,
   useValidateTokenQuery,
+  useGetFeatureServicesQuery,
  } = apiSlice;

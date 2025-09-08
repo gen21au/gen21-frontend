@@ -1,10 +1,10 @@
 'use client';
 
-import { Metadata } from 'next';
+// import { Metadata } from 'next';
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import RegisterForm from '@/components/Auth/RegisterForm';
-import { AuthService } from '@/services/authService';
+// import { AuthService } from '@/services/authService';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store/store';
 

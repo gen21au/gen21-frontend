@@ -1,19 +1,9 @@
 'use client';
-
 import { useRef } from 'react';
-
-const categories = [
-  { id: 1, name: 'Plumbing', icon: '🔧' },
-  { id: 2, name: 'Electrical', icon: '💡' },
-  { id: 3, name: 'Cleaning', icon: '🧹' },
-  { id: 4, name: 'AC Repair', icon: '❄️' },
-  { id: 5, name: 'Painting', icon: '🎨' },
-  { id: 6, name: 'Carpentry', icon: '🪚' },
-  { id: 7, name: 'Gardening', icon: '🌿' },
-  { id: 8, name: 'Pest Control', icon: '🐜' },
-];
+import { useGetFeatureServicesQuery } from '@/store/apiSlice';
 
 export default function ServiceCategoryCarousel() {
+  const { data: categories = [], isLoading, error } = useGetFeatureServicesQuery();
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const scrollRight = () => {
@@ -25,6 +15,9 @@ export default function ServiceCategoryCarousel() {
     }
   };
 
+  // console.log(categories);
+  
+
   return (
     <section className="py-12 px-4">
       <div className="max-w-7xl mx-auto">
@@ -35,13 +28,29 @@ export default function ServiceCategoryCarousel() {
             ref={scrollRef}
             className="flex space-x-4 overflow-x-auto pb-4 scrollbar-hide"
           >
-            {categories.map((category) => (
+            {isLoading && <div className="text-center p-4">Loading categories...</div>}
+            {error && <div className="text-red-500 p-4">Error loading categories</div>}
+            {categories?.map((category: {
+              id: number;
+              name: { en: string };
+              media: Array<{ url: string }>;
+              color: string;
+              has_media: boolean;
+              featured: boolean;
+            }) => (
               <div 
                 key={category.id}
                 className="flex-shrink-0 w-40 p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow"
+                style={{ borderColor: category.color }}
               >
-                <div className="text-3xl mb-2">{category.icon}</div>
-                <h3 className="text-sm font-medium text-gray-900">{category.name}</h3>
+                <img 
+                  src={category.media?.[0]?.url || '/icons/default-service.png'}
+                  alt={category.name.en}
+                  className="w-12 h-12 object-contain mx-auto mb-2"
+                />
+                <h3 className="text-sm font-medium text-gray-900 text-center">
+                  {category.name.en}
+                </h3>
               </div>
             ))}
             

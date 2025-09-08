@@ -10,6 +10,7 @@ export const API_ENDPOINTS = {
     LOGOUT: '/logout?version=2',
 
     //Home page APIs
-    FEATURE_SERVICES: '/feature_e_services?version=2/',
+    CATEGORIES: '/categories/?version=2',
+    FEATURE_SERVICES: '/feature_e_services?version=2',
     
 }
