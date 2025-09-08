@@ -1,14 +1,47 @@
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { store } from '@/store/store';
 import { setCredentials, logout, updateTokens, updateUser } from '@/store/authSlice';
 import { TokenManager } from '@/utils/tokenManager';
 import { TokenValidation } from '@/utils/tokenValidation';
 import { API_ENDPOINTS, BASE_API_URL } from '@/utils/api_endpoints';
-// The apiSlice import is no longer needed here as authApi is removed.
+
+// Create API slice
+export const authApi = createApi({
+  reducerPath: 'authApi',
+  baseQuery: fetchBaseQuery({ 
+    baseUrl: BASE_API_URL,
+  prepareHeaders: (headers) => {
+    const token = store.getState().auth.accessToken;
+    // if (token) {
+    //   headers.set('Authorization', `Bearer ${token}`);
+    // }
+    return headers;
+  }
+  }),
+  endpoints: (builder) => ({
+    login: builder.mutation({
+      query: (credentials) => ({
+        url: API_ENDPOINTS.LOGIN,
+        method: 'POST',
+        body: credentials
+      })
+    }),
+    register: builder.mutation({
+      query: (userData) => ({
+        url: API_ENDPOINTS.REGISTER,
+        method: 'POST',
+        body: userData
+      })
+    })
+  })
+});
+
+// Export hooks for usage in components
+export const { useLoginMutation, useRegisterMutation } = authApi;
 
 export class AuthService {
-  // Login user - This method is now redundant if RTK Query's useLoginMutation is used.
-  // It should be removed or refactored to use the RTK Query mutation.
+  // Login user
   static async login(email: string, password: string) {
-    console.warn("AuthService.login is a direct fetch call and might be redundant with RTK Query's useLoginMutation. Consider refactoring.");
     try {
       const response = await fetch(`${BASE_API_URL}${API_ENDPOINTS.LOGIN}`, {
         method: 'POST',
@@ -23,50 +56,61 @@ export class AuthService {
       }
 
       const data = await response.json();
+      
+      // Store tokens and user data
+      store.dispatch(setCredentials({
+        user: data.user,
+        accessToken: data.accessToken,
+        isAuthenticated: true,
+      }));
+
       return data;
     } catch (error) {
       throw error;
     }
   }
 
-  // Logout user - This method needs access to the store to get the token and dispatch logout.
-  // It will be refactored to accept dispatch and getState or use a custom hook.
+  // Logout user
   static async logout() {
-    console.warn("AuthService.logout needs refactoring to access store without circular dependency.");
-    // Placeholder for refactoring:
-    // const token = getStore().getState().auth.accessToken;
-    // try {
-    //   const response = await fetch(`${BASE_API_URL}${API_ENDPOINTS.LOGOUT}&api_token=${token}`, {
-    //     method: 'GET',
-    //     headers: {
-    //       'Content-Type': 'application/json',
-    //     },
-    //   });
-    //   if (!response.ok) {
-    //     throw new Error('Logout failed');
-    //   }
-    //   getStore().dispatch(logout());
-    // } catch (error) {
-    //   throw error;
-    // }
+    const token = this.getAccessToken();
+    try {
+      const response = await fetch(`${BASE_API_URL}${API_ENDPOINTS.LOGOUT}&api_token=${token}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Login failed');
+      }
+      store.dispatch(logout());
+    } catch (error) {
+      throw error;
+    }
   }
 
   // Check if user is authenticated (async)
   static async isAuthenticated(): Promise<boolean> {
-    console.warn("AuthService.isAuthenticated needs refactoring to access store without circular dependency.");
-    return false; // Placeholder
+    const state = store.getState();
+    if (!state.auth.isAuthenticated) return false;
+    
+    const token = state.auth.accessToken;
+    if (!token) return false;
+    
+    return await TokenValidation.isTokenValid(token);
   }
 
   // Get current user
   static getCurrentUser() {
-    console.warn("AuthService.getCurrentUser needs refactoring to access store without circular dependency.");
-    return null; // Placeholder
+    const state = store.getState();
+    return state.auth.user;
   }
 
   // Get access token
   static getAccessToken(): string | null {
-    console.warn("AuthService.getAccessToken needs refactoring to access store without circular dependency.");
-    return null; // Placeholder
+    const state = store.getState();
+    return state.auth.accessToken;
   }
 
   // Validate token (async)
@@ -85,30 +129,32 @@ export class AuthService {
   static async initializeAuth(): Promise<boolean> {
     const user = TokenManager.getUser();
     const accessToken = TokenManager.getAccessToken();
-
+    
     if (user && accessToken) {
       const isValid = await TokenValidation.isTokenValid(accessToken);
       if (isValid) {
-        console.warn("AuthService.initializeAuth needs refactoring to dispatch setCredentials.");
-        // Placeholder for refactoring:
-        // getStore().dispatch(setCredentials({ user, accessToken, isAuthenticated: true }));
+        store.dispatch(setCredentials({
+          user,
+          accessToken,
+          isAuthenticated: true,
+        }));
         return true;
       }
     }
+    
     return false;
   }
 
   // Clear all auth data
   static clearAuth() {
     TokenManager.clearTokens();
-    console.warn("AuthService.clearAuth needs refactoring to dispatch logout.");
-    // Placeholder for refactoring:
-    // getStore().dispatch(logout());
+    store.dispatch(logout());
   }
 
   // Handle token expiration
   static handleTokenExpiration() {
     this.clearAuth();
+    // Redirect to login page
     if (typeof window !== 'undefined') {
       window.location.href = '/login?expired=true';
     }
@@ -121,16 +167,16 @@ export class AuthService {
 
     const validationResult = await TokenValidation.validateToken(token);
     if (validationResult.isValid && validationResult.user) {
+      // Convert id from string to number to match the expected User type
       const userWithNumberId = {
         ...validationResult.user,
         id: parseInt(validationResult.user.id, 10),
-        avatarUrl: validationResult.user.avatarUrl || 'avater.png'
+        avatarUrl: validationResult.user.avatarUrl || 'avater.png' // Provide a default value if avatarUrl is missing
       };
-      console.warn("AuthService.validateAndUpdateUser needs refactoring to dispatch updateUser.");
-      // Placeholder for refactoring:
-      // getStore().dispatch(updateUser(userWithNumberId));
+      store.dispatch(updateUser(userWithNumberId));
       return true;
     }
+
     return false;
   }
 }

@@ -5,16 +5,21 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import RegisterForm from '@/components/Auth/RegisterForm';
 import { AuthService } from '@/services/authService';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/store/store';
 
 
 export default function RegisterPage() {
   const router = useRouter();
+  const { isAuthenticated, user } = useSelector((state: RootState) => state.auth);
 
   useEffect(() => {
     const checkAuth = async () => {
-      const isAuthenticated = await AuthService.isAuthenticated();
+      // const isAuthenticated = await AuthService.isAuthenticated();
+      
       if (isAuthenticated) {
-        router.replace('/'); // Redirect to home page if already authenticated
+        router.replace('/');
+        return; // Prevent further execution
       }
     };
     checkAuth();
