@@ -10,14 +10,9 @@ services:
     environment:
       - NODE_ENV=production
       - PORT=3000
-    # do NOT necessarily expose to host; NPM will proxy via Docker network
-    # If you must expose for debugging, uncomment ports:
-    # ports:
-    #   - "3000:3000"
     networks:
-      - npm_network
+      - gen21network
 
 networks:
-  npm_network:
+  gen21network:
     external: true
-    name: "gen21network"
