@@ -1,11 +1,12 @@
 import { TokenValidation } from './tokenValidation';
+import { User } from '@/types/auth';
 
 export class TokenManager {
   private static readonly ACCESS_TOKEN_KEY = 'accessToken';
   private static readonly USER_KEY = 'user';
 
   // Set tokens in both cookies and localStorage
-  static setTokens(accessToken: string, user: any) {
+  static setTokens(accessToken: string, user: User) {
     // Set in localStorage for client-side access
     localStorage.setItem(this.ACCESS_TOKEN_KEY, accessToken);
     localStorage.setItem(this.USER_KEY, JSON.stringify(user));
@@ -19,7 +20,7 @@ export class TokenManager {
     return localStorage.getItem(this.ACCESS_TOKEN_KEY);
   }
 
-  static getUser(): any | null {
+  static getUser(): User | null {
     const user = localStorage.getItem(this.USER_KEY);
     return user ? JSON.parse(user) : null;
   }
@@ -74,4 +75,4 @@ export class TokenManager {
     if (parts.length === 2) return parts.pop()?.split(';').shift() || null;
     return null;
   }
-} 
+}

@@ -10,7 +10,7 @@ import { RootState } from '@/store/store';
 
 export default function LoginPage() {
   const router = useRouter();
-  const { isAuthenticated, user } = useSelector((state: RootState) => state.auth);
+  const { isAuthenticated } = useSelector((state: RootState) => state.auth);
   useEffect(() => {
     const checkAuth = async () => {
       // const isAuthenticated = await AuthService.isAuthenticated();

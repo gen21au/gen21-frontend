@@ -1,6 +1,4 @@
 import { Metadata } from 'next';
-import Header from '@/components/Includes/Header';
-import Footer from '@/components/Includes/Footer';
 
 export const metadata: Metadata = {
   title: 'About Us - GEN21',
@@ -124,7 +122,7 @@ export default function AboutPage() {
             Ready to Work Together?
           </h2>
           <p className="text-xl mb-8 opacity-90">
-            Let's discuss how we can help transform your digital presence
+            Let&apos;s discuss how we can help transform your digital presence
           </p>
           <a
             href="/contact"

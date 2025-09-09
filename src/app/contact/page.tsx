@@ -39,7 +39,7 @@ export default function ContactPage() {
         <div className="max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:py-20 lg:px-8">
           <div className="text-center mb-16">
             <h1 className="text-4xl font-bold text-gray-900 mb-4">Get in Touch</h1>
-            <p className="text-lg text-gray-600">We'd love to hear from you</p>
+            <p className="text-lg text-gray-600">We&apos;d love to hear from you</p>
           </div>
 
           <div className="grid lg:grid-cols-2 gap-12">

@@ -1,6 +1,8 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { AuthResponse, ForgotPasswordRequest, LoginRequest, RegisterRequest, ResetPasswordRequest, User, LogoutResponse } from '@/types/auth';
+import { AuthResponse, ForgotPasswordRequest, LoginRequest, RegisterRequest, ResetPasswordRequest, User } from '@/types/auth';
+import { FeatureService } from '@/types/services';
 import { API_ENDPOINTS } from "@/utils/api_endpoints";
+import { RootState } from '@/store/store';
 
 const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://gen21api.test/api';
 
@@ -10,14 +12,14 @@ export const apiSlice = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: baseUrl,
     prepareHeaders: (headers, { getState }) => {
-      const token = (getState() as any).auth?.accessToken;
+      const token = (getState() as RootState).auth?.accessToken;
       if (token) headers.set('Authorization', `Bearer ${token}`);
       return headers;
     }
   }),
   endpoints: (builder) => ({
     // Feature Services endpoint
-    getFeatureServices: builder.query<any, void>({
+    getFeatureServices: builder.query<FeatureService[], void>({
       query: () => API_ENDPOINTS.FEATURE_SERVICES,
       transformResponse: (response: { data: Array<{ 
         id: number

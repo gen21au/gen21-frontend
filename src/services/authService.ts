@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { store } from '@/store/store';
-import { setCredentials, logout, updateTokens, updateUser } from '@/store/authSlice';
+import { setCredentials, logout, updateUser } from '@/store/authSlice';
 import { TokenManager } from '@/utils/tokenManager';
 import { TokenValidation } from '@/utils/tokenValidation';
 import { API_ENDPOINTS, BASE_API_URL } from '@/utils/api_endpoints';
@@ -72,9 +72,8 @@ export class AuthService {
 
   // Logout user
   static async logout() {
-    const token = this.getAccessToken();
     try {
-      const response = await fetch(`${BASE_API_URL}${API_ENDPOINTS.LOGOUT}&api_token=${token}`, {
+      const response = await fetch(`${BASE_API_URL}${API_ENDPOINTS.LOGOUT}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -120,7 +119,7 @@ export class AuthService {
   }
 
   // Get user from token (async)
-  static async getUserFromToken(): Promise<any> {
+  static async getUserFromToken(): Promise<{id: string; avatarUrl: string} | null> {
     const token = this.getAccessToken();
     return token ? await TokenValidation.getUserFromToken(token) : null;
   }
@@ -171,7 +170,7 @@ export class AuthService {
       const userWithNumberId = {
         ...validationResult.user,
         id: parseInt(validationResult.user.id, 10),
-        avatarUrl: validationResult.user.avatarUrl || 'avater.png' // Provide a default value if avatarUrl is missing
+        avatarUrl: validationResult.user.avatarUrl ?? 'avatar.png' // Default avatar image
       };
       store.dispatch(updateUser(userWithNumberId));
       return true;

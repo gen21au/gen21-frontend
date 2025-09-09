@@ -41,7 +41,7 @@ export default function Testimonials() {
             <SwiperSlide key={index}>
               <div className="p-6 bg-white rounded-xl shadow-md h-full">
                 <div className="text-yellow-400 text-xl mb-4">{testimonial.rating}</div>
-                <p className="text-gray-600 mb-4">"{testimonial.text}"</p>
+                <p className="text-gray-600 mb-4">&quot;{testimonial.text}&quot;</p>
                 <h4 className="font-semibold">{testimonial.name}</h4>
                 <p className="text-gray-500 text-sm">{testimonial.role}</p>
               </div>

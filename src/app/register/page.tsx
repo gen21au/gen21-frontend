@@ -11,7 +11,7 @@ import { RootState } from '@/store/store';
 
 export default function RegisterPage() {
   const router = useRouter();
-  const { isAuthenticated, user } = useSelector((state: RootState) => state.auth);
+  const { isAuthenticated } = useSelector((state: RootState) => state.auth);
 
   useEffect(() => {
     const checkAuth = async () => {

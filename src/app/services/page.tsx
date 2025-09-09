@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import CategoryList from '@/components/Services/CategoryList';
 import ServiceList from '@/components/Services/ServiceList';
+import Link from 'next/link';
 
 const AllServicesPage = () => {
   const [activeCategoryId, setActiveCategoryId] = useState<number>(1);
@@ -44,7 +45,7 @@ const AllServicesPage = () => {
       <div className="bg-white border-b">
         <div className="container mx-auto px-4 py-3">
           <div className="flex items-center text-sm text-gray-600">
-            <a href="/" className="hover:text-blue-600">Home</a>
+            <Link href="/" className="hover:text-blue-600">Home</Link>
             <span className="mx-2">›</span>
             <span className="text-gray-900 font-medium">Services</span>
           </div>

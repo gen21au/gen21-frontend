@@ -15,7 +15,7 @@ export default function ServiceDetails({
   features = ['Professional service', 'Experienced technicians', 'Quality materials'],
   availability = 'Available 7 days a week',
   duration = '1-2 hours',
-  warranty = '30 days service warranty'
+  warranty = "30 days' service warranty"
 }: ServiceDetailsProps) {
   return (
     <div className="mt-8 space-y-6 bg-white p-6 rounded-lg shadow-sm">
@@ -46,7 +46,7 @@ export default function ServiceDetails({
       
       {/* Features section */}
       <div>
-        <h2 className="text-xl font-semibold mb-3">What's Included</h2>
+        <h2 className="text-xl font-semibold mb-3">What&apos;s Included</h2>
         <ul className="space-y-2">
           {features.map((feature, index) => (
             <li key={index} className="flex items-start">

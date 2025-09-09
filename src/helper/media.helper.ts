@@ -6,14 +6,14 @@ interface MediaItem {
     thumb?: string;
     icon?: string;
     name?: string;
-    [key: string]: any; // Allow extra properties (like custom_properties, etc.)
+    [key: string]: unknown; // Allow extra properties (like custom_properties, etc.)
   }
   
   // Define Model type with media
   interface ModelWithMedia {
     media?: MediaItem[];
     has_media?: boolean;
-    [key: string]: any;
+    [key: string]: unknown;
   }
   
   /**
@@ -52,4 +52,3 @@ interface MediaItem {
         return mediaItem.url ?? defaultImage;
     }
   }
-  
