@@ -5,11 +5,6 @@ import FaqSection from '@/components/Faq/FaqSection';
 import Reviews from '@/components/Services/Reviews';
 import Link from 'next/link';
 
-interface PageProps {
-  params: { slug: string };
-  searchParams?: { [key: string]: string | string[] | undefined };
-}
-
 interface Service {
   title: string;
   price: number;
@@ -23,7 +18,13 @@ interface Service {
   category?: string;
 }
 
-export default async function ServicePage({ params }: PageProps) {
+interface ServicePageProps {
+  params: Promise<{ slug: string }>;
+  searchParams?: Promise<Record<string, string | string[] | undefined>>;
+}
+
+export default async function ServicePage({ params, searchParams }: ServicePageProps) {
+  const { slug } = await params;  // ✅ required because params is Promise
   // TODO: Fetch service data based on slug
   const service: Service = {
     title: 'AC Repair Service',

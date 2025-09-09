@@ -25,6 +25,9 @@ export const apiSlice = createApi({
         id: number
         name: { en: string }
         media: Array<{ url: string }>
+        color: string;
+        has_media: boolean;
+        featured: boolean;
       }> }) => response.data,
     }),
     login: builder.mutation<AuthResponse, LoginRequest>({
