@@ -1,4 +1,5 @@
-export const BASE_API_URL = process.env.NEXT_PUBLIC_BASE_API_URL || 'http://gen21api.test/api';
+console.log('NEXT_PUBLIC_BASE_API_URL:', process.env.NEXT_PUBLIC_BASE_API_URL);
+export const BASE_API_URL = process.env.NEXT_PUBLIC_BASE_API_URL || 'https://app.gen21.com.au/api';
 
 export const API_ENDPOINTS = {
     //Auth

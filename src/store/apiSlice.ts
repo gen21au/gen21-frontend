@@ -1,16 +1,14 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { AuthResponse, ForgotPasswordRequest, LoginRequest, RegisterRequest, ResetPasswordRequest, User } from '@/types/auth';
-import { FeatureService } from '@/types/services';
-import { API_ENDPOINTS } from "@/utils/api_endpoints";
+import { CategoryType, FeatureService } from '@/types/services';
+import { API_ENDPOINTS, BASE_API_URL } from "@/utils/api_endpoints";
 import { RootState } from '@/store/store';
-
-const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://gen21api.test/api';
 
 
 export const apiSlice = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({
-    baseUrl: baseUrl,
+    baseUrl: BASE_API_URL,
     prepareHeaders: (headers, { getState }) => {
       const token = (getState() as RootState).auth?.accessToken;
       if (token) headers.set('Authorization', `Bearer ${token}`);
@@ -21,6 +19,20 @@ export const apiSlice = createApi({
     // Feature Services endpoint
     getFeatureServices: builder.query<FeatureService[], void>({
       query: () => API_ENDPOINTS.FEATURE_SERVICES,
+      transformResponse: (response: { data: Array<{ 
+        id: number
+        name: { en: string }
+        media: Array<{ url: string }>
+        color: string;
+        has_media: boolean;
+        featured: boolean;
+      }> }) => response.data.map(item => ({
+        ...item,
+        price: 0, // Add a default price value
+      })),
+    }),
+    getCategories: builder.query<CategoryType[], void>({
+      query: () => API_ENDPOINTS.CATEGORIES,
       transformResponse: (response: { data: Array<{ 
         id: number
         name: { en: string }
@@ -72,4 +84,5 @@ export const {
   useResetPasswordMutation,
   useValidateTokenQuery,
   useGetFeatureServicesQuery,
+  useGetCategoriesQuery,
  } = apiSlice;

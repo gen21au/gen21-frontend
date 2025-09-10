@@ -1,9 +1,9 @@
 'use client';
 import { useRef } from 'react';
-import { useGetFeatureServicesQuery } from '@/store/apiSlice';
+import { useGetCategoriesQuery } from '@/store/apiSlice';
 
 export default function ServiceCategoryCarousel() {
-  const { data: categories = [], isLoading, error } = useGetFeatureServicesQuery();
+  const { data: categories = [], isLoading, error } = useGetCategoriesQuery();
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const scrollRight = () => {

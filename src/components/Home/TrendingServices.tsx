@@ -2,41 +2,15 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-
-const trendingServices = [
-  {
-    id: 1,
-    name: 'Deep Cleaning Service',
-    image: '/service-thumb.png',
-    price: 'Starts at $99',
-  },
-  {
-    id: 2,
-    name: 'AC Master Service',
-    image: '/service-thumb.png',
-    price: 'Starts at $49',
-  },
-  {
-    id: 3,
-    name: 'Interior Painting',
-    image: '/service-thumb.png',
-    price: 'Starts at $199',
-  },
-  {
-    id: 4,
-    name: 'Plumbing Repair',
-    image: '/service-thumb.png',
-    price: 'Starts at $79',
-  },
-  {
-    id: 5,
-    name: 'Electrical Wiring',
-    image: '/service-thumb.png',
-    price: 'Starts at $89',
-  },
-];
+import { useGetFeatureServicesQuery } from '@/store/apiSlice';
+import { FeatureService } from '@/types/services';
 
 export default function TrendingServices() {
+  const { data: categories = [], isLoading, error } = useGetFeatureServicesQuery();
+
+  // Filter for featured services if needed, or just use all categories as trending
+  // For now, let's assume all feature services are trending services
+  const trendingServices: FeatureService[] = categories;
   return (
     <section className="py-16 bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -50,20 +24,24 @@ export default function TrendingServices() {
         </div>
 
         <div className="flex space-x-6 overflow-x-auto pb-4 -mx-4 px-4">
+          {isLoading && <div className="text-center p-4">Loading trending services...</div>}
+          {error && <div className="text-red-500 p-4">Error loading trending services</div>}
           {trendingServices.map((service) => (
             <div key={service.id} className="flex-shrink-0 w-64 bg-white rounded-lg shadow-md overflow-hidden group">
               <div className="relative h-40">
                 <Image
-                  src={service.image}
-                  alt={service.name}
+                  src={service.media?.[0]?.url || '/icons/default-service.png'}
+                  alt={service.name.en}
                   width={300}
                   height={200}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                 />
               </div>
               <div className="p-4">
-                <h3 className="text-lg font-semibold text-gray-900 mb-1">{service.name}</h3>
-                <p className="text-gray-600">{service.price}</p>
+                <h3 className="text-lg font-semibold text-gray-900 mb-1">{service.name.en}</h3>
+                {/* Assuming price is not directly available in FeatureService, or needs to be derived */}
+                {/* For now, I'll remove the price or add a placeholder */}
+                <p className="text-gray-600">Price not available</p>
               </div>
             </div>
           ))}
