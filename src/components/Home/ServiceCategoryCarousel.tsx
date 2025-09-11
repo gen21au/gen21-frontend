@@ -16,7 +16,7 @@ export default function ServiceCategoryCarousel() {
     }
   };
 
-  // console.log(categories);
+  console.log({error, categories});
   
 
   return (

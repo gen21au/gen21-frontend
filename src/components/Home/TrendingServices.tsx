@@ -11,7 +11,7 @@ export default function TrendingServices() {
   // Filter for featured services if needed, or just use all services as trending
   // For now, let's assume all feature services are trending services
   const trendingServices: FeatureServiceType[] = services;
-  console.log(trendingServices);
+  // console.log(trendingServices);
   
   return (
     <section className="py-16 bg-gray-50">
@@ -31,7 +31,7 @@ export default function TrendingServices() {
           {trendingServices.map((service) => (
             <div key={service.id} className="flex-shrink-0 w-64 bg-white rounded-lg shadow-md overflow-hidden group">
               <div className="relative h-40">
-                <Image
+                <img
                   src={service.media?.[0]?.url || '/icons/default-service.png'}
                   alt={service.name.en}
                   width={300}
