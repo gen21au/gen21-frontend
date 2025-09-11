@@ -43,3 +43,6 @@ next-env.d.ts
 yarn-error.log
 yarn.lock
 package-lock.json
+
+.deploy.sh
+.github/*
