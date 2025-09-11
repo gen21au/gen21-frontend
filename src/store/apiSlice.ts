@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { AuthResponse, ForgotPasswordRequest, LoginRequest, RegisterRequest, ResetPasswordRequest, User } from '@/types/auth';
-import { CategoryType, FeatureService } from '@/types/services';
+import { CategoryType, FeatureServiceType } from '@/types/services';
 import { API_ENDPOINTS, BASE_API_URL } from "@/utils/api_endpoints";
 import { RootState } from '@/store/store';
 
@@ -17,7 +17,7 @@ export const apiSlice = createApi({
   }),
   endpoints: (builder) => ({
     // Feature Services endpoint
-    getFeatureServices: builder.query<FeatureService[], void>({
+    getFeatureServices: builder.query<FeatureServiceType[], void>({
       query: () => API_ENDPOINTS.FEATURE_SERVICES,
       transformResponse: (response: { data: Array<{ 
         id: number
@@ -26,10 +26,9 @@ export const apiSlice = createApi({
         color: string;
         has_media: boolean;
         featured: boolean;
-      }> }) => response.data.map(item => ({
-        ...item,
-        price: 0, // Add a default price value
-      })),
+        price: number;
+        discount_price: number;
+      }> }) => response.data,
     }),
     getCategories: builder.query<CategoryType[], void>({
       query: () => API_ENDPOINTS.CATEGORIES,

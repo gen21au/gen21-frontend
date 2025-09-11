@@ -1,9 +1,10 @@
-export interface FeatureService {
+export interface FeatureServiceType {
   id: number;
   name: {
     en: string;
   };
   price: number;
+  discount_price: number;
   media: Array<{ url: string }>;
   color: string;
   has_media: boolean;

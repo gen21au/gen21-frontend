@@ -1,6 +1,7 @@
 'use client';
 import { useRef } from 'react';
 import { useGetCategoriesQuery } from '@/store/apiSlice';
+import Link from 'next/link';
 
 export default function ServiceCategoryCarousel() {
   const { data: categories = [], isLoading, error } = useGetCategoriesQuery();
@@ -56,9 +57,12 @@ export default function ServiceCategoryCarousel() {
             
             {/* More Button */}
             <div className="flex-shrink-0 flex items-center px-6">
-              <button className="whitespace-nowrap px-6 py-2 bg-gray-100 hover:bg-gray-200 rounded-full text-sm font-medium transition-colors">
+                <Link
+                href="/services" 
+                className="whitespace-nowrap px-6 py-2 bg-gray-100 hover:bg-gray-200 rounded-full text-sm font-medium transition-colors cursor-pointer"
+                >
                 View All Categories →
-              </button>
+                </Link>
             </div>
             
           </div>

@@ -3,14 +3,16 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useGetFeatureServicesQuery } from '@/store/apiSlice';
-import { FeatureService } from '@/types/services';
+import { FeatureServiceType } from '@/types/services';
 
 export default function TrendingServices() {
-  const { data: categories = [], isLoading, error } = useGetFeatureServicesQuery();
+  const { data: services = [], isLoading, error } = useGetFeatureServicesQuery();
 
-  // Filter for featured services if needed, or just use all categories as trending
+  // Filter for featured services if needed, or just use all services as trending
   // For now, let's assume all feature services are trending services
-  const trendingServices: FeatureService[] = categories;
+  const trendingServices: FeatureServiceType[] = services;
+  console.log(trendingServices);
+  
   return (
     <section className="py-16 bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
