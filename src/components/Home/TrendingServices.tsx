@@ -41,7 +41,7 @@ export default function TrendingServices() {
                 <h3 className="text-lg font-semibold text-gray-900 mb-1">{service.name.en}</h3>
                 {/* Assuming price is not directly available in FeatureService, or needs to be derived */}
                 {/* For now, I'll remove the price or add a placeholder */}
-                <p className="text-gray-600">Price not available</p>
+                <p className="text-gray-600">Start at ৳{service?.price}</p>
               </div>
             </div>
           ))}
