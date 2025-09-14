@@ -3,6 +3,14 @@ import { useRef } from 'react';
 import { useGetCategoriesQuery } from '@/store/apiSlice';
 import Link from 'next/link';
 
+// Skeleton loader component for category cards
+const CategoryCardSkeleton = () => (
+  <div className="flex-shrink-0 w-40 p-4 bg-white rounded-lg shadow-sm animate-pulse">
+    <div className="w-12 h-12 bg-gray-200 rounded-full mx-auto mb-2"></div>
+    <div className="h-4 bg-gray-200 rounded w-3/4 mx-auto"></div>
+  </div>
+);
+
 export default function ServiceCategoryCarousel() {
   const { data: categories = [], isLoading, error } = useGetCategoriesQuery();
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -17,21 +25,30 @@ export default function ServiceCategoryCarousel() {
   };
 
   console.log({error, categories});
-  
+
 
   return (
     <section className="py-12 px-4">
       <div className="max-w-7xl mx-auto">
         <h2 className="text-2xl font-bold text-gray-900 mb-6">Featured Service Categories</h2>
-        
+
         <div className="relative">
-          <div 
+          <div
             ref={scrollRef}
             className="flex space-x-4 overflow-x-auto pb-4 scrollbar-hide"
           >
-            {isLoading && <div className="text-center p-4">Loading categories...</div>}
+            {isLoading && (
+              <>
+                <CategoryCardSkeleton />
+                <CategoryCardSkeleton />
+                <CategoryCardSkeleton />
+                <CategoryCardSkeleton />
+                <CategoryCardSkeleton />
+                <CategoryCardSkeleton />
+              </>
+            )}
             {error && <div className="text-red-500 p-4">Error loading categories</div>}
-            {categories?.map((category: {
+            {!isLoading && !error && categories?.map((category: {
               id: number;
               name: { en: string };
               media: Array<{ url: string }>;
@@ -39,12 +56,12 @@ export default function ServiceCategoryCarousel() {
               has_media: boolean;
               featured: boolean;
             }) => (
-              <div 
+              <div
                 key={category.id}
                 className="flex-shrink-0 w-40 p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow"
                 style={{ borderColor: category.color }}
               >
-                <img 
+                <img
                   src={category.media?.[0]?.url || '/icons/default-service.png'}
                   alt={category.name.en}
                   className="w-12 h-12 object-contain mx-auto mb-2"
@@ -54,21 +71,21 @@ export default function ServiceCategoryCarousel() {
                 </h3>
               </div>
             ))}
-            
+
             {/* More Button */}
             <div className="flex-shrink-0 flex items-center px-6">
                 <Link
-                href="/services" 
+                href="/services"
                 className="whitespace-nowrap px-6 py-2 bg-gray-100 hover:bg-gray-200 rounded-full text-sm font-medium transition-colors cursor-pointer"
                 >
                 View All Categories →
                 </Link>
             </div>
-            
+
           </div>
-          
+
           {/* Scroll right button */}
-          <button 
+          <button
             onClick={scrollRight}
             className="absolute right-0 top-1/2 -translate-y-1/2 bg-white/80 backdrop-blur-sm p-3 rounded-full shadow-lg hover:bg-white transition-colors z-10"
           >
@@ -76,7 +93,7 @@ export default function ServiceCategoryCarousel() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
             </svg>
           </button>
-          
+
           {/* Gradient overlay */}
           <div className="absolute top-0 right-0 w-24 h-full bg-gradient-to-l from-white to-transparent pointer-events-none" />
         </div>
