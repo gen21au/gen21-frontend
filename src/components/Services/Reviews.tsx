@@ -2,59 +2,60 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
+import { EServiceReviewType } from '@/types/services';
 
-interface Review {
-  id: string;
-  user: string;
-  avatar?: string;
-  rating: number;
-  comment: string;
-  date: string;
-  helpful?: number;
-}
+// interface Review {
+//   id: string;
+//   user: string;
+//   avatar?: string;
+//   rating: number;
+//   comment: string;
+//   date: string;
+//   helpful?: number;
+// }
 
-export default function Reviews({ serviceId }: { serviceId: string }) {
+export default function Reviews({ reviews }: { reviews: EServiceReviewType[] }) {
   // Sample reviews data
-  const sampleReviews: Review[] = [
-    {
-      id: '1',
-      user: 'Sarah Johnson',
-      avatar: '/avatar.png',
-      rating: 5,
-      comment: 'Excellent service! The technician was very professional and fixed my AC in no time. Highly recommend!',
-      date: '2023-08-15',
-      helpful: 12
-    },
-    {
-      id: '2',
-      user: 'Michael Chen',
-      avatar: '/avatar.png',
-      rating: 4,
-      comment: 'Good service overall. The technician was knowledgeable and fixed the issue, but arrived a bit late.',
-      date: '2023-07-28',
-      helpful: 8
-    },
-    {
-      id: '3',
-      user: 'Emily Rodriguez',
-      avatar: '/avatar.png',
-      rating: 5,
-      comment: 'Very satisfied with the service. The technician explained everything clearly and did a thorough job.',
-      date: '2023-07-10',
-      helpful: 15
-    },
-    {
-      id: '4',
-      user: 'David Wilson',
-      avatar: '/avatar.png',
-      rating: 4,
-      comment: 'Good service and fair pricing. Would use again for future repairs.',
-      date: '2023-06-22',
-      helpful: 6
-    }
-  ];
+  // const sampleReviews: Review[] = [
+  //   {
+  //     id: '1',
+  //     user: 'Sarah Johnson',
+  //     avatar: '/avatar.png',
+  //     rating: 5,
+  //     comment: 'Excellent service! The technician was very professional and fixed my AC in no time. Highly recommend!',
+  //     date: '2023-08-15',
+  //     helpful: 12
+  //   },
+  //   {
+  //     id: '2',
+  //     user: 'Michael Chen',
+  //     avatar: '/avatar.png',
+  //     rating: 4,
+  //     comment: 'Good service overall. The technician was knowledgeable and fixed the issue, but arrived a bit late.',
+  //     date: '2023-07-28',
+  //     helpful: 8
+  //   },
+  //   {
+  //     id: '3',
+  //     user: 'Emily Rodriguez',
+  //     avatar: '/avatar.png',
+  //     rating: 5,
+  //     comment: 'Very satisfied with the service. The technician explained everything clearly and did a thorough job.',
+  //     date: '2023-07-10',
+  //     helpful: 15
+  //   },
+  //   {
+  //     id: '4',
+  //     user: 'David Wilson',
+  //     avatar: '/avatar.png',
+  //     rating: 4,
+  //     comment: 'Good service and fair pricing. Would use again for future repairs.',
+  //     date: '2023-06-22',
+  //     helpful: 6
+  //   }
+  // ];
 
-  const [reviews, setReviews] = useState<Review[]>(sampleReviews);
+  // const [reviews, setReviews] = useState<Review[]>(sampleReviews);
   const [newReview, setNewReview] = useState({ rating: 5, comment: '' });
   const [showForm, setShowForm] = useState(false);
 
@@ -68,18 +69,18 @@ export default function Reviews({ serviceId }: { serviceId: string }) {
       helpful: 0,
       ...newReview
     };
-    setReviews([reviewToAdd, ...reviews]);
+    // setReviews([reviewToAdd, ...reviews]);
     setNewReview({ rating: 5, comment: '' });
     setShowForm(false);
   };
 
   // Calculate average rating
-  const averageRating = reviews.reduce((acc, review) => acc + review.rating, 0) / reviews.length;
+  const averageRating = reviews.reduce((acc, review) => acc + review.rate, 0) / reviews.length;
   const totalReviews = reviews.length;
 
   // Count ratings by star level
   const ratingCounts = reviews.reduce((counts, review) => {
-    counts[review.rating] = (counts[review.rating] || 0) + 1;
+    counts[review.rate] = (counts[review.rate] || 0) + 1;
     return counts;
   }, {} as Record<number, number>);
 
@@ -199,10 +200,10 @@ export default function Reviews({ serviceId }: { serviceId: string }) {
           <div key={review.id} className="border-b pb-6 mb-6 last:border-0">
             <div className="flex items-start gap-4">
               <div className="relative w-10 h-10 rounded-full overflow-hidden bg-gray-200 flex-shrink-0">
-                {review.avatar && (
+                {review?.user?.has_media && (
                   <Image
-                    src={review.avatar}
-                    alt={review.user}
+                    src={review?.user?.media?.[0]?.url || '/avatar.png'}
+                    alt={review.user?.name}
                     fill
                     className="object-cover"
                   />
@@ -211,23 +212,23 @@ export default function Reviews({ serviceId }: { serviceId: string }) {
               
               <div className="flex-1">
                 <div className="flex flex-wrap items-center gap-2 mb-1">
-                  <h4 className="font-semibold text-gray-900">{review.user}</h4>
+                  <h4 className="font-semibold text-gray-900">{review?.user?.name}</h4>
                   <span className="text-sm text-gray-500">•</span>
-                  <span className="text-sm text-gray-500">{new Date(review.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</span>
+                  <span className="text-sm text-gray-500">{review.created_at ? new Date(review.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : 'N/A'}</span>
                 </div>
                 
                 <div className="flex mb-3">
-                  {renderStars(review.rating)}
+                  {renderStars(review.rate)}
                 </div>
                 
-                <p className="text-gray-700 mb-3">{review.comment}</p>
+                <p className="text-gray-700 mb-3">{review.review}</p>
                 
                 <div className="flex items-center text-sm">
                   <button className="text-gray-500 hover:text-gray-700 flex items-center gap-1">
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5" />
                     </svg>
-                    <span>Helpful ({review.helpful})</span>
+                    {/* <span>Helpful ({review.helpful})</span> */}
                   </button>
                 </div>
               </div>

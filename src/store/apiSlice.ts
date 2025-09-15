@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { AuthResponse, ForgotPasswordRequest, LoginRequest, RegisterRequest, ResetPasswordRequest, User } from '@/types/auth';
-import { CategoryType, FeatureServiceType } from '@/types/services';
+import { CategoryType, FeatureServiceType, EServiceType } from '@/types/services';
 import { API_ENDPOINTS, BASE_API_URL } from "@/utils/api_endpoints";
 import { RootState } from '@/store/store';
 
@@ -72,11 +72,16 @@ export const apiSlice = createApi({
     validateToken: builder.query<User, void>({
       query: () => '/',
     }),
-    
+    // Service Details endpoint
+    getServiceDetails: builder.query<EServiceType, number>({
+      query: (id) => `/e_services/${id}?version=2`,
+      transformResponse: (response: { success: boolean; data: EServiceType; message: string }) => response.data,
+    }),
+
   }),
 });
 
-export const { 
+export const {
   useLoginMutation,
   useRegisterMutation,
   useForgotPasswordMutation,
@@ -84,4 +89,5 @@ export const {
   useValidateTokenQuery,
   useGetFeatureServicesQuery,
   useGetCategoriesQuery,
+  useGetServiceDetailsQuery,
  } = apiSlice;

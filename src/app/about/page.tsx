@@ -3,6 +3,9 @@ import { Metadata } from 'next';
 export const metadata: Metadata = {
   title: 'About Us - GEN21',
   description: 'Learn more about our company and values',
+  icons: {
+    icon: '/favicon.png',
+  },
 };
 
 export default function AboutPage() {

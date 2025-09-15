@@ -3,6 +3,9 @@ import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'Page Not Found - GEN21',
+  icons: {
+    icon: '/favicon.png',
+  },
 };
 
 export default function NotFound() {

@@ -19,6 +19,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Welcome to GEN21: Bangladesh's Premier On-Demand Service Platform | GEN21",
   description: "GEN21 offers hassle-free access to essential services in Bangladesh. Explore our user-friendly app, connect with verified providers, and elevate your lifestyle with convenience at your fingertips",
+  icons: {
+    icon: '/favicon.png',
+  },
 };
 
 export default function RootLayout({
