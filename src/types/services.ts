@@ -30,7 +30,7 @@ export interface EServiceReviewType {
   e_service_id: number;
   created_at: Date | null;
   updated_at: Date | null;
-  custom_fields: any[];
+  // custom_fields: any[];
   user: {
     name: string;
     email: string;
@@ -64,12 +64,12 @@ export interface EServiceType {
   description: {
     en: string;
   };
-  faq: any; // Can be null or array
+  faq: string | null; // Can be null or array
   featured: boolean;
   enable_booking: boolean;
   available: boolean;
   e_provider_id: number;
-  custom_fields: any[];
+  // custom_fields: any[];
   has_media: boolean;
   total_reviews: number;
   is_favorite: boolean;
