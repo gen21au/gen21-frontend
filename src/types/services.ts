@@ -86,3 +86,27 @@ export interface EServiceType {
   }>;
   media: Array<{ url: string }>;
 }
+
+export interface ServiceItem {
+  id: number;
+  title: string;
+  price: number;
+  description: string;
+  total_reviews: number;
+  total_rate: number;
+  image: string;
+}
+
+export interface CategoryWithServices {
+  id: number;
+  name: string;
+  image: string;
+  total_service_count: number;
+  services: ServiceItem[];
+}
+
+export interface AllCategoryServicesResponse {
+  success: boolean;
+  data: CategoryWithServices[];
+  message: string;
+}

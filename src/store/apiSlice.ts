@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { AuthResponse, ForgotPasswordRequest, LoginRequest, RegisterRequest, ResetPasswordRequest, User } from '@/types/auth';
-import { CategoryType, FeatureServiceType, EServiceType } from '@/types/services';
+import { CategoryType, FeatureServiceType, EServiceType, AllCategoryServicesResponse, CategoryWithServices } from '@/types/services';
 import { API_ENDPOINTS, BASE_API_URL } from "@/utils/api_endpoints";
 import { RootState } from '@/store/store';
 
@@ -77,6 +77,11 @@ export const apiSlice = createApi({
       query: (id) => `/e_services/${id}?version=2`,
       transformResponse: (response: { success: boolean; data: EServiceType; message: string }) => response.data,
     }),
+    // All Category Services endpoint
+    getAllCategoryServices: builder.query<CategoryWithServices[], void>({
+      query: () => API_ENDPOINTS.ALL_CATEGORY_SERVICES,
+      transformResponse: (response: AllCategoryServicesResponse) => response.data,
+    }),
 
   }),
 });
@@ -90,4 +95,5 @@ export const {
   useGetFeatureServicesQuery,
   useGetCategoriesQuery,
   useGetServiceDetailsQuery,
+  useGetAllCategoryServicesQuery,
  } = apiSlice;

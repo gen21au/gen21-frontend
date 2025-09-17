@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
+import { useGetAllCategoryServicesQuery } from '@/store/apiSlice';
 
 interface CategoryProps {
   id: number;
@@ -14,25 +15,22 @@ interface CategoryListProps {
   onCategoryClick?: (categoryId: number) => void;
 }
 
-const CategoryList: React.FC<CategoryListProps> = ({ 
-  activeCategoryId = 1, 
-  onCategoryClick 
+const CategoryList: React.FC<CategoryListProps> = ({
+  activeCategoryId = 1,
+  onCategoryClick
 }) => {
-  // TODO: Replace with API data
-  const categories: CategoryProps[] = [
-    { id: 1, name: 'Design & Creative', count: 12, icon: '🎨' },
-    { id: 2, name: 'Development', count: 8, icon: '💻' },
-    { id: 3, name: 'Marketing', count: 15, icon: '📊' },
-    { id: 4, name: 'Writing', count: 5, icon: '✍️' },
-    { id: 5, name: 'Photography', count: 7, icon: '📷' },
-    { id: 6, name: 'Home Maintenance', count: 18, icon: '🔧' },
-    { id: 7, name: 'Cleaning', count: 9, icon: '🧹' },
-    { id: 8, name: 'Electrical', count: 6, icon: '💡' },
-  ];
+  const { data: categoriesData, isLoading, error } = useGetAllCategoryServicesQuery();
+
+  const categories: CategoryProps[] = categoriesData ? categoriesData.map(cat => ({
+    id: cat.id,
+    name: cat.name,
+    count: cat.total_service_count,
+    icon: cat.image
+  })) : [];
 
   const [activeCategory, setActiveCategory] = useState<number>(activeCategoryId);
-  const categoryRefs = useRef<Array<HTMLLIElement | null>>(Array(categories.length).fill(null));
-  
+  const categoryRefs = useRef<Array<HTMLLIElement | null>>([]);
+
   // Function to set ref that returns void instead of the element
   const setRef = (index: number) => (el: HTMLLIElement | null) => {
     categoryRefs.current[index] = el;
@@ -87,25 +85,40 @@ const CategoryList: React.FC<CategoryListProps> = ({
       </div>
       
       <ul className="py-2">
-        {categories.map((category, index) => (
-          <li 
-            key={category.id}
-            ref={setRef(index)}
-            data-category-id={category.id}
-            className={`flex items-center justify-between px-5 py-3 cursor-pointer transition-all duration-200 ${activeCategory === category.id ? 'bg-blue-50 border-l-4 border-blue-500' : 'hover:bg-gray-50 border-l-4 border-transparent'}`}
-            onClick={() => handleCategoryClick(category.id)}
-          >
-            <div className="flex items-center">
-              <span className="text-xl mr-3">{category.icon}</span>
-              <span className={`${activeCategory === category.id ? 'font-medium text-blue-600' : 'text-gray-700'}`}>
-                {category.name}
-              </span>
+        {isLoading ? (
+          <li className="px-5 py-3">
+            <div className="animate-pulse">
+              <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
+              <div className="h-3 bg-gray-200 rounded w-1/2"></div>
             </div>
-            <span className="bg-gray-100 text-gray-600 text-xs font-medium px-2.5 py-0.5 rounded-full">
-              {category.count}
-            </span>
           </li>
-        ))}
+        ) : error ? (
+          <li className="px-5 py-3 text-red-500 text-sm">
+            Error loading categories
+          </li>
+        ) : (
+          categories.map((category, index) => (
+            <li
+              key={category.id}
+              ref={setRef(index)}
+              data-category-id={category.id}
+              className={`flex items-center justify-between px-5 py-3 cursor-pointer transition-all duration-200 ${activeCategory === category.id ? 'bg-blue-50 border-l-4 border-blue-500' : 'hover:bg-gray-50 border-l-4 border-transparent'}`}
+              onClick={() => handleCategoryClick(category.id)}
+            >
+              <div className="flex items-center">
+                {category.icon && (
+                  <img src={category.icon} alt={category.name} className="w-5 h-5 mr-3" />
+                )}
+                <span className={`${activeCategory === category.id ? 'font-medium text-blue-600' : 'text-gray-700'}`}>
+                  {category.name}
+                </span>
+              </div>
+              <span className="bg-gray-100 text-gray-600 text-xs font-medium px-2.5 py-0.5 rounded-full">
+                {category.count}
+              </span>
+            </li>
+          ))
+        )}
       </ul>
     </div>
   );
