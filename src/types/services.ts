@@ -71,9 +71,9 @@ export interface EServiceType {
   e_provider_id: number;
   // custom_fields: any[];
   has_media: boolean;
+  rate: number;
   total_reviews: number;
   is_favorite: boolean;
-  rate: number;
   min_price: number | null;
   max_price: number | null;
   has_sub_type: boolean;
@@ -97,6 +97,21 @@ export interface ServiceItem {
   image: string;
 }
 
+export interface ServiceType {
+  title: string;
+  price: number;
+  description: string;
+  images: string[];
+  faqs: { question: string; answer: string }[];
+  features?: string[];
+  availability?: string;
+  duration?: string;
+  rate: number;
+  total_reviews: number;
+  warranty?: string;
+  category?: string;
+}
+
 export interface CategoryWithServices {
   id: number;
   name: string;
@@ -110,3 +125,4 @@ export interface AllCategoryServicesResponse {
   data: CategoryWithServices[];
   message: string;
 }
+

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useGetAllCategoryServicesQuery } from '@/store/apiSlice';
 import { ServiceItem, CategoryWithServices } from '@/types/services';
+import { generateSlug } from '@/helper/common.helper';
 
 // Skeleton loader component for service cards
 const ServiceCardSkeleton = () => {
@@ -173,7 +174,8 @@ const ServiceList: React.FC<ServiceListProps> = ({
                 .slice(0, visibleServicesCount[categoryId] || initialServicesPerCategory)
                 .map((service) => (
               <Link 
-                href={`/services/${service.title.toLowerCase().replace(/\s+/g, '-')}`}
+                // href={`/services/${service.title.toLowerCase().replace(/\s+/g, '-')}`}
+                href={`/services/${generateSlug(service.title, service.id)}`}
                 key={service.id} 
                 className="group"
               >

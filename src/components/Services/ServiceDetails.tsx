@@ -2,6 +2,8 @@ interface ServiceDetailsProps {
   title: string;
   price: number;
   description: string;
+  rating: number;
+  total_reviews: number;
   features?: string[];
   availability?: string;
   duration?: string;
@@ -12,6 +14,8 @@ export default function ServiceDetails({
   title, 
   price, 
   description,
+  rating,
+  total_reviews,
   features = ['Professional service', 'Experienced technicians', 'Quality materials'],
   availability = 'Available 7 days a week',
   duration = '1-2 hours',
@@ -25,7 +29,7 @@ export default function ServiceDetails({
         <div className="flex items-center mt-2">
           <div className="flex items-center text-yellow-400">
             <span>★★★★★</span>
-            <span className="text-gray-600 ml-2 text-sm">(4.8/5 based on 24 reviews)</span>
+            <span className="text-gray-600 ml-2 text-sm">({rating ?? 0}/5 based on {total_reviews ?? 0} reviews)</span>
           </div>
         </div>
       </div>

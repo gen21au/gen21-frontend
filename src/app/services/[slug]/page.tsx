@@ -1,19 +1,6 @@
 import ServiceDetailsClient from './ServiceDetailsClient';
 import { BASE_API_URL } from '@/utils/api_endpoints';
-import { EServiceType } from '@/types/services';
-
-interface Service {
-  title: string;
-  price: number;
-  description: string;
-  images: string[];
-  faqs: { question: string; answer: string }[];
-  features?: string[];
-  availability?: string;
-  duration?: string;
-  warranty?: string;
-  category?: string;
-}
+import { EServiceType, ServiceType } from '@/types/services';
 
 interface ServicePageProps {
   params: Promise<{ slug: string }>;
@@ -27,7 +14,7 @@ export default async function ServicePage({ params, searchParams }: ServicePageP
   const idMatch = slug.match(/-(\d+)$/);
   const serviceId = idMatch ? parseInt(idMatch[1], 10) : null;
 
-  let service: Service;
+  let service: ServiceType;
 
   if (serviceId) {
     try {
@@ -61,6 +48,8 @@ export default async function ServicePage({ params, searchParams }: ServicePageP
           features: features.length > 0 ? features : ['Professional service', 'Quality assurance'],
           availability: eService.available ? 'Available' : 'Currently unavailable',
           duration: eService.duration,
+          rate: eService.rate,
+          total_reviews: eService.total_reviews,
           warranty: 'Service warranty included', // Default
           faqs: [] // API has faq as null, so empty array
         };
@@ -74,7 +63,9 @@ export default async function ServicePage({ params, searchParams }: ServicePageP
         title: 'Service Not Found',
         price: 0,
         description: 'Unable to load service details. Please try again later.',
-        images: ['/service-thumb.png'],
+        rate: 0,
+        total_reviews: 0,
+        images: ['/images/default-service.png'],
         category: 'Home Services',
         features: [],
         availability: 'Unavailable',
@@ -89,7 +80,9 @@ export default async function ServicePage({ params, searchParams }: ServicePageP
       title: 'Invalid Service',
       price: 0,
       description: 'The service slug is invalid.',
-      images: ['/service-thumb.png'],
+      rate: 0,
+      total_reviews: 0,
+      images: ['/images/default-service.png'],
       category: 'Home Services',
       features: [],
       availability: 'Unavailable',

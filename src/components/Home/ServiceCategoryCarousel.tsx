@@ -62,7 +62,7 @@ export default function ServiceCategoryCarousel() {
                 style={{ borderColor: category.color }}
               >
                 <img
-                  src={category.media?.[0]?.url || '/icons/default-service.png'}
+                  src={category.media?.[0]?.url || '/images/default-service.png'}
                   alt={category.name.en}
                   className="w-12 h-12 object-contain mx-auto mb-2"
                 />

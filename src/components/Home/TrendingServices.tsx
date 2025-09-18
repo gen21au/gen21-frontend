@@ -1,9 +1,10 @@
 'use client';
 
-import Image from 'next/image';
+// import Image from 'next/image';
 import Link from 'next/link';
 import { useGetFeatureServicesQuery } from '@/store/apiSlice';
 import { FeatureServiceType } from '@/types/services';
+import { generateSlug } from '@/helper/common.helper';
 
 // Skeleton loader component for service cards
 const ServiceCardSkeleton = () => (
@@ -15,11 +16,6 @@ const ServiceCardSkeleton = () => (
     </div>
   </div>
 );
-
-// Helper function to generate slug from service name
-const generateSlug = (name: string, id: number) => {
-  return `${name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')}-${id}`;
-};
 
 export default function TrendingServices() {
   const { data: services = [], isLoading, error } = useGetFeatureServicesQuery();

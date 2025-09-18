@@ -7,29 +7,17 @@ import OrderForm from '@/components/Services/OrderForm';
 import FaqSection from '@/components/Faq/FaqSection';
 import Reviews from '@/components/Services/Reviews';
 import Link from 'next/link';
-
-interface Service {
-  title: string;
-  price: number;
-  description: string;
-  images: string[];
-  faqs: { question: string; answer: string }[];
-  features?: string[];
-  availability?: string;
-  duration?: string;
-  warranty?: string;
-  category?: string;
-}
+import { ServiceType } from '@/types/services';
 
 interface ServiceDetailsClientProps {
   serviceId: number;
-  initialService: Service;
+  initialService: ServiceType;
 }
 
 export default function ServiceDetailsClient({ serviceId, initialService }: ServiceDetailsClientProps) {
   const { data: eService, isLoading, error } = useGetServiceDetailsQuery(serviceId);
 
-  let service: Service = initialService;
+  let service: ServiceType = initialService;
 
   if (eService && !isLoading && !error) {
     // Parse features from subtype_heading (HTML list)
@@ -50,11 +38,13 @@ export default function ServiceDetailsClient({ serviceId, initialService }: Serv
       title: eService.name.en,
       price: eService.discount_price > 0 ? eService.discount_price : eService.price,
       description: eService.description.en.replace(/<[^>]*>/g, ''), // Strip HTML tags
-      images: eService.media.length > 0 ? eService.media.map(m => m.url) : ['/service-thumb.png'],
+      images: eService.media.length > 0 ? eService.media.map(m => m.url) : ['/images/default-service.png'],
       category: (eService.categories && eService.categories.length > 0) ? eService.categories[0].name.en : 'Home Services',
       features: features.length > 0 ? features : ['Professional service', 'Quality assurance'],
       availability: eService.available ? 'Available' : 'Currently unavailable',
       duration: eService.duration,
+      rate: eService.rate,
+      total_reviews: eService.total_reviews,
       warranty: 'Service warranty included', // Default
       faqs: [] // API has faq as null, so empty array
     };
@@ -86,6 +76,8 @@ export default function ServiceDetailsClient({ serviceId, initialService }: Serv
       title: 'Service Not Found',
       price: 0,
       description: 'Unable to load service details. Please try again later.',
+      rate: 0,
+      total_reviews: 0,
       images: ['/service-thumb.png'],
       category: 'Home Services',
       features: [],
@@ -106,7 +98,7 @@ export default function ServiceDetailsClient({ serviceId, initialService }: Serv
             <span className="mx-2">/</span>
             <Link href="/services" className="hover:text-blue-600">Services</Link>
             <span className="mx-2">/</span>
-            <Link href={`/services/${service.category?.toLowerCase().replace(/\s+/g, '-')}`} className="hover:text-blue-600">{service.category}</Link>
+            <Link href={`/services`} className="hover:text-blue-600">{service.category}</Link>
             <span className="mx-2">/</span>
             <span className="text-gray-900 font-medium">{service.title}</span>
           </nav>
@@ -123,6 +115,8 @@ export default function ServiceDetailsClient({ serviceId, initialService }: Serv
               title={service.title}
               price={service.price}
               description={service.description}
+              rating={service.rate}
+              total_reviews={service.total_reviews}
               features={service.features}
               availability={service.availability}
               duration={service.duration}

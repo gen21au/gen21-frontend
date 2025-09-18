@@ -30,7 +30,7 @@ export default function LoginForm() {
             name: userData.data.name,
             email: userData.data.email,
             role: userData.data.roles && userData.data.roles.length > 0 ? userData.data.roles[0].name : 'user',
-            avatarUrl: getMediaUrl(userData.data, "avatar", "thumb", "/avatar.png"),
+            avatarUrl: getMediaUrl(userData.data, "avatar", "thumb", "/images/avatar.png"),
           },
           accessToken: userData.data.api_token,
           isAuthenticated: true,
