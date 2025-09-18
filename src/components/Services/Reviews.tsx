@@ -64,7 +64,7 @@ export default function Reviews({ reviews }: { reviews: EServiceReviewType[] }) 
     const reviewToAdd = {
       id: Math.random().toString(),
       user: 'You',
-      avatar: '/avatar.png',
+      avatar: '/images/avatar.png',
       date: new Date().toISOString().split('T')[0],
       helpful: 0,
       ...newReview
@@ -202,7 +202,7 @@ export default function Reviews({ reviews }: { reviews: EServiceReviewType[] }) 
               <div className="relative w-10 h-10 rounded-full overflow-hidden bg-gray-200 flex-shrink-0">
                 {review?.user?.has_media && (
                   <Image
-                    src={review?.user?.media?.[0]?.url || '/avatar.png'}
+                    src={review?.user?.media?.[0]?.url || '/images/avatar.png'}
                     alt={review.user?.name}
                     fill
                     className="object-cover"

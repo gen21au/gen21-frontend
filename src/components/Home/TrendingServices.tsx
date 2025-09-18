@@ -59,7 +59,7 @@ export default function TrendingServices() {
             >
               <div className="relative h-40">
                 <img
-                  src={service.media?.[0]?.url || '/icons/default-service.png'}
+                  src={service.media?.[0]?.url || '/images/default-service.png'}
                   alt={service.name.en}
                   width={300}
                   height={200}

@@ -83,7 +83,7 @@ export default function RegisterForm() {
           name: userData.data.name, // Use userData.data.name directly
           email: userData.data.email,
           role: userData.data.roles[0]?.name || 'customer', // Access role from roles array
-          avatarUrl: 'avatar.png',
+          avatarUrl: '/images/avatar.png',
         },
         accessToken: userData.data.api_token,
         isAuthenticated: true,

@@ -31,7 +31,7 @@ export default function HowItWorks() {
               </button>
             </div>
             <Image 
-              src="/how-it-works.jpg" 
+              src="/images/how-it-works.jpg" 
               width={800}
               height={450}
               alt="Process demonstration"

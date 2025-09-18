@@ -184,14 +184,14 @@ const ServiceList: React.FC<ServiceListProps> = ({
                         <div className="absolute inset-0 bg-gray-200 animate-pulse"></div>
                       )}
                       <Image 
-                        src={service.image || '/icons/default-service.png'}
+                        src={service.image || '/images/default-service.png'}
                         alt={service.title}
                         width={400}
                         height={300}
                         className={`w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 ${!loadedImages[service.id] ? 'opacity-0' : 'opacity-100'}`}
                         onLoad={() => handleImageLoad(service.id)}
                         onError={(e) => {
-                          e.currentTarget.src = '/icons/default-service.png';
+                          e.currentTarget.src = '/images/default-service.png';
                           handleImageLoad(service.id);
                         }}
                       />

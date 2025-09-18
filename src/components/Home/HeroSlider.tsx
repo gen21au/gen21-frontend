@@ -8,7 +8,7 @@ export default function HeroSlider() {
     <div id="hero-section" className="relative h-[500px]">
       <div className="absolute inset-0 overflow-hidden">
         <Image
-          src="/home-service.jpg"
+          src="/images/home-service.jpg"
           alt="Home Services"
           fill
           className="object-cover"

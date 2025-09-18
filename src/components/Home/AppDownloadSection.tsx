@@ -49,7 +49,7 @@ export default function AppDownloadSection() {
             <div className="relative">
               <div className="absolute inset-0 bg-gray-900 rounded-[40px] shadow-2xl transform rotate-1" />
               <Image
-                src="/app-preview.webp"
+                src="/images/app-preview.webp"
                 width={320}
                 height={650}
                 alt="App preview"

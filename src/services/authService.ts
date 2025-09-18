@@ -170,7 +170,7 @@ export class AuthService {
       const userWithNumberId = {
         ...validationResult.user,
         id: parseInt(validationResult.user.id, 10),
-        avatarUrl: validationResult.user.avatarUrl ?? 'avatar.png' // Default avatar image
+        avatarUrl: validationResult.user.avatarUrl ?? 'images/avatar.png' // Default avatar image
       };
       store.dispatch(updateUser(userWithNumberId));
       return true;
