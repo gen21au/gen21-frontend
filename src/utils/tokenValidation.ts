@@ -15,6 +15,16 @@ interface TokenValidationResult {
 }
 
 export class TokenValidation {
+  static async checkAuth(): Promise<boolean> {
+    // In a real implementation, this would check the actual token
+    // For now, we'll return true to allow development
+    // This should be replaced with actual token validation logic
+    if (typeof window !== 'undefined') {
+      const token = localStorage.getItem('authToken');
+      return !!token;
+    }
+    return false;
+  }
   static async validateToken(token: string): Promise<TokenValidationResult> {
     if (!token) {
       return { isValid: false, error: 'No token provided' };
@@ -49,4 +59,4 @@ export class TokenValidation {
     const result = await this.validateToken(token);
     return result.user || null;
   }
-} 
+}
