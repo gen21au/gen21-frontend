@@ -1,34 +1,20 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useAppSelector } from '@/store/store'
-import { Order } from '@/types/orders'
+import { useGetOrdersQuery } from '@/store/apiSlice' // Import the new hook
 
 export default function OrderHistoryPage() {
-  const [orders, setOrders] = useState<Order[]>([])
-  const [loading, setLoading] = useState(true)
   const token = useAppSelector((state) => state.auth.accessToken)
+  const { data: orders = [], isLoading: loading, error } = useGetOrdersQuery(token || '', {
+    skip: !token, // Skip the query if token is not available
+  });
 
   useEffect(() => {
-    const fetchOrders = async () => {
-      if (!token) return
-
-      try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/order-list?api_token=${token}`)
-        const data = await response.json()
-
-        if (data.success) {
-          setOrders(data.data)
-        }
-      } catch (error) {
-        console.error('Failed to fetch orders:', error)
-      } finally {
-        setLoading(false)
-      }
+    if (error) {
+      console.error('Failed to fetch orders:', error);
     }
-
-    fetchOrders()
-  }, [token])
+  }, [error]);
 
   if (loading) {
     return <div className="flex justify-center items-center h-64">Loading...</div>

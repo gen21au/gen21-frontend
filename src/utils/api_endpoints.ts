@@ -17,4 +17,8 @@ export const API_ENDPOINTS = {
     BLOGS: '/blogs?version=2',
     FAQS: '/faqs?version=2',
     ALL_CATEGORY_SERVICES: '/all-category-services?version=2',
+    ORDER_LIST: '/order-list',
+    PROFILE_UPDATE: '/users',
+    PROFILE_AVATAR_UPDATE: '/users', // Endpoint for avatar update (e.g., POST /users/{id}/avatar)
+    PROFILE_PASSWORD_UPDATE: '/users', // Endpoint for password update (e.g., POST /users/{id}/password)
 }

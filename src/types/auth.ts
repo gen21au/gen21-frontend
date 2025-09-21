@@ -24,6 +24,8 @@ export interface User {
   id: number;
   name: string;
   email: string;
+  phone_number?: string; // Added phone_number
+  address?: string; // Added address
   role: string;
   avatarUrl: string;
 }

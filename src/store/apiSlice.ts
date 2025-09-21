@@ -1,6 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { AuthResponse, ForgotPasswordRequest, LoginRequest, RegisterRequest, ResetPasswordRequest, User } from '@/types/auth';
 import { CategoryType, FeatureServiceType, EServiceType, AllCategoryServicesResponse, CategoryWithServices } from '@/types/services';
+import { Order } from '@/types/orders'; // Import Order type
 import { API_ENDPOINTS, BASE_API_URL } from "@/utils/api_endpoints";
 import { RootState } from '@/store/store';
 
@@ -15,6 +16,7 @@ export const apiSlice = createApi({
       return headers;
     }
   }),
+  tagTypes: ['User', 'Order'], // Define tag types
   endpoints: (builder) => ({
     // Feature Services endpoint
     getFeatureServices: builder.query<FeatureServiceType[], void>({
@@ -71,6 +73,7 @@ export const apiSlice = createApi({
     }),
     validateToken: builder.query<User, void>({
       query: () => '/',
+      providesTags: ['User'], // Provide 'User' tag
     }),
     // Service Details endpoint
     getServiceDetails: builder.query<EServiceType, number>({
@@ -82,7 +85,35 @@ export const apiSlice = createApi({
       query: () => API_ENDPOINTS.ALL_CATEGORY_SERVICES,
       transformResponse: (response: AllCategoryServicesResponse) => response.data,
     }),
-
+    // Orders endpoint
+    getOrders: builder.query<Order[], string>({
+      query: (token) => `${API_ENDPOINTS.ORDER_LIST}?api_token=${token}`,
+      transformResponse: (response: { success: boolean; data: Order[]; message: string }) => response.data,
+      providesTags: ['Order'], // Provide 'Order' tag
+    }),
+    updateProfile: builder.mutation<User, { id: number; data: Partial<User>; token: string }>({
+      query: ({ id, data, token }) => ({
+        url: `${API_ENDPOINTS.PROFILE_UPDATE}/${id}?api_token=${token}`,
+        method: 'POST',
+        body: data,
+      }),
+      invalidatesTags: ['User'], // Invalidate 'User' tag on update
+    }),
+    updateAvatar: builder.mutation<User, { id: number; formData: FormData; token: string }>({
+      query: ({ id, formData, token }) => ({
+        url: `${API_ENDPOINTS.PROFILE_AVATAR_UPDATE}/${id}/avatar?api_token=${token}`,
+        method: 'POST',
+        body: formData,
+      }),
+      invalidatesTags: ['User'],
+    }),
+    updatePassword: builder.mutation<{ message: string }, { id: number; data: { password: string; password_confirmation: string }; token: string }>({
+      query: ({ id, data, token }) => ({
+        url: `${API_ENDPOINTS.PROFILE_PASSWORD_UPDATE}/${id}/password?api_token=${token}`,
+        method: 'POST',
+        body: data,
+      }),
+    }),
   }),
 });
 
@@ -96,4 +127,8 @@ export const {
   useGetCategoriesQuery,
   useGetServiceDetailsQuery,
   useGetAllCategoryServicesQuery,
+  useGetOrdersQuery,
+  useUpdateProfileMutation,
+  useUpdateAvatarMutation, // Export the new hook
+  useUpdatePasswordMutation, // Export the new hook
  } = apiSlice;
