@@ -14,7 +14,7 @@ export default function LoginPage() {
   useEffect(() => {
     const checkAuth = async () => {
       // const isAuthenticated = await AuthService.isAuthenticated();
-      console.log({isAuthenticated});
+      // console.log({isAuthenticated});
       
       if (isAuthenticated) {
         router.replace('/');

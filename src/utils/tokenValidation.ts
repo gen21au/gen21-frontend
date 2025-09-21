@@ -1,4 +1,5 @@
 import { API_ENDPOINTS, BASE_API_URL } from "./api_endpoints";
+import { TokenManager } from "./tokenManager";
 
 interface User {
   id: string;
@@ -20,7 +21,9 @@ export class TokenValidation {
     // For now, we'll return true to allow development
     // This should be replaced with actual token validation logic
     if (typeof window !== 'undefined') {
-      const token = localStorage.getItem('authToken');
+      const token = TokenManager.getAccessToken();
+      console.log('checkAuth:: ', token);
+      
       return !!token;
     }
     return false;

@@ -24,8 +24,6 @@ export default function ServiceCategoryCarousel() {
     }
   };
 
-  console.log({error, categories});
-
 
   return (
     <section className="py-12 px-4">

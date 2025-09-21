@@ -18,6 +18,12 @@ const nextConfig: NextConfig = {
         port: '',
         pathname: '/storage/**',
       },
+      {
+        protocol: "https",
+        hostname: "storage.gen21.com.au",
+        port: "",
+        pathname: "/**",
+      },
     ],
   },
 };
