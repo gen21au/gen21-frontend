@@ -8,6 +8,7 @@ import FaqSection from '@/components/Faq/FaqSection';
 import Reviews from '@/components/Services/Reviews';
 import Link from 'next/link';
 import { ServiceType } from '@/types/services';
+import Spinner from '@/components/Common/Spinner';
 
 interface ServiceDetailsClientProps {
   serviceId: number;
@@ -51,24 +52,7 @@ export default function ServiceDetailsClient({ serviceId, initialService }: Serv
   }
 
   if (isLoading) {
-    return (
-      <div className="bg-gray-50 min-h-screen pb-16">
-        <div className="max-w-7xl mx-auto px-4 py-8">
-          <div className="animate-pulse">
-            <div className="h-8 bg-gray-300 rounded mb-4"></div>
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-              <div className="lg:col-span-2 space-y-8">
-                <div className="h-64 bg-gray-300 rounded"></div>
-                <div className="h-32 bg-gray-300 rounded"></div>
-              </div>
-              <div className="lg:col-span-1">
-                <div className="h-96 bg-gray-300 rounded"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
+    return <Spinner />;
   }
 
   if (error) {

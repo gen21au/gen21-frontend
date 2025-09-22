@@ -20,14 +20,20 @@ export interface LoginRequest {
     password: string;
 }
 
+import { MediaItem } from '@/helper/media.helper';
+
 export interface User {
   id: number;
   name: string;
   email: string;
   phone_number?: string; // Added phone_number
   address?: string; // Added address
+  bio?: string; // Added bio
   role: string;
-  avatarUrl: string;
+  avatarUrl?: string; // Make avatarUrl optional as it might not always be present
+  media?: MediaItem[]; // Added media property
+  has_media?: boolean; // Added has_media property
+  [key: string]: unknown; // Added index signature
 }
 
   
@@ -51,4 +57,25 @@ export interface LogoutResponse {
   success: boolean;
   data: string;
   message: string;
+}
+
+export interface UserRequest {
+  api_token: string;
+}
+
+export interface ValidateTokenResponse {
+  success: boolean;
+  data: User;
+  message: string;
+}
+
+export interface UpdateProfileRequest {
+  name?: string;
+  email?: string;
+  phone_number?: string;
+  address?: string;
+  password?: string;
+  password_confirmation?: string;
+  avatar?: File | null; // Make avatar optional and allow null
+  api_token: string;
 }

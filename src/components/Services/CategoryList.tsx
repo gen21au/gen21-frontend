@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { useGetAllCategoryServicesQuery } from '@/store/apiSlice';
+import Spinner from '@/components/Common/Spinner';
 
 interface CategoryProps {
   id: number;
@@ -86,12 +87,7 @@ const CategoryList: React.FC<CategoryListProps> = ({
       
       <ul className="py-2">
         {isLoading ? (
-          <li className="px-5 py-3">
-            <div className="animate-pulse">
-              <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
-              <div className="h-3 bg-gray-200 rounded w-1/2"></div>
-            </div>
-          </li>
+          <Spinner />
         ) : error ? (
           <li className="px-5 py-3 text-red-500 text-sm">
             Error loading categories

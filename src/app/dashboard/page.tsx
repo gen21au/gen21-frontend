@@ -7,6 +7,7 @@ import OrderChart from '@/components/Dashboard/OrderChart'
 import RecentOrders from '@/components/Dashboard/RecentOrders'
 // import { Order } from '@/types/orders'
 import { useGetOrdersQuery } from '@/store/apiSlice' // Import the new hook
+import Spinner from '@/components/Common/Spinner';
 
 export default function DashboardPage() {
   const { accessToken: token } = useAppSelector((state: RootState) => state.auth);
@@ -21,7 +22,7 @@ export default function DashboardPage() {
   }, [error]);
 
   if (loading) {
-    return <div className="flex justify-center items-center h-64">Loading...</div>
+    return <Spinner />;
   }
 
   const totalOrders = orders.length

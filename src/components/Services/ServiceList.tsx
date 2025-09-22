@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { useGetAllCategoryServicesQuery } from '@/store/apiSlice';
 import { ServiceItem, CategoryWithServices } from '@/types/services';
 import { generateSlug } from '@/helper/common.helper';
+import Spinner from '@/components/Common/Spinner';
 
 // Skeleton loader component for service cards
 const ServiceCardSkeleton = () => {
@@ -162,12 +163,7 @@ const ServiceList: React.FC<ServiceListProps> = ({
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {isLoading ? (
-              // Show skeleton loaders when loading
-              Array.from({ length: initialServicesPerCategory }).map((_, index) => (
-                <div key={`skeleton-${categoryId}-${index}`}>
-                  <ServiceCardSkeleton />
-                </div>
-              ))
+              <Spinner />
             ) : (
               // Show actual services when loaded
               servicesByCategory[categoryId]

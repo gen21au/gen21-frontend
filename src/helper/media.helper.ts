@@ -1,5 +1,5 @@
 // Define MediaItem type (based on your sample object)
-interface MediaItem {
+export interface MediaItem {
     id: number;
     collection_name: string;
     url: string;
@@ -10,7 +10,7 @@ interface MediaItem {
   }
   
   // Define Model type with media
-  interface ModelWithMedia {
+  export interface ModelWithMedia {
     media?: MediaItem[];
     has_media?: boolean;
     [key: string]: unknown;

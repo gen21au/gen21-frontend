@@ -4,6 +4,7 @@ import { useState, ReactNode } from 'react'
 // import { TokenValidation } from '@/utils/tokenValidation'
 import { redirect } from 'next/navigation'
 import { RootState, useAppSelector } from '@/store/store'
+import Spinner from '@/components/Common/Spinner'
 
 interface AuthGuardProps {
   children: ReactNode
@@ -11,11 +12,11 @@ interface AuthGuardProps {
 
 export default function AuthGuard({ children }: AuthGuardProps) {
   // const [isAuthenticated, setIsAuthenticated] = useState(false)
-  const [loading, setLoading] = useState(true)
+  // const [loading, setLoading] = useState(true)
   const { isAuthenticated } = useAppSelector((state: RootState) => state.auth);
 
   // if (loading) {
-  //   return <div className="flex justify-center items-center min-h-screen">Loading authentication...</div>
+  //   return <Spinner />;
   // }
 
   if (!isAuthenticated) {
