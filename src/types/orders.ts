@@ -11,6 +11,16 @@ export interface EService {
   booking_at: string
 }
 
+interface CustomField {
+  value: string;
+  view: string;
+  name: string;
+}
+
+interface CustomFields {
+  [key: string]: CustomField;
+}
+
 export interface Address {
   address: string
   description: string | null
@@ -19,7 +29,7 @@ export interface Address {
   default: boolean | null
   user_id: number
   id: number
-  custom_fields: any[]
+  custom_fields: Array<CustomFields>
 }
 
 export interface CustomerRequest {
@@ -52,7 +62,7 @@ export interface CustomerRequest {
     enable_booking: boolean
     available: boolean
     e_provider_id: number
-    custom_fields: any[]
+    custom_fields: Array<CustomFields>
     has_media: boolean
     total_reviews: number
     is_favorite: boolean
@@ -94,7 +104,7 @@ export interface EProvider {
   abn_number: string
   photo_id_front: string
   photo_id_back: string
-  custom_fields: any[]
+  custom_fields: Array<CustomFields>
   has_media: boolean
   rate: number
   total_reviews: number
@@ -113,7 +123,7 @@ export interface Order {
   total_item: number
   total_accept_item: number
   total_price: number
-  coupon: any | null
+  coupon: string | null
   price: number
   customer_request: CustomerRequest[]
 }

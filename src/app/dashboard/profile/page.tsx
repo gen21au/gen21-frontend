@@ -97,7 +97,10 @@ export default function ProfilePage() {
       // Given the instruction to use ONE API and mutation, we'll combine all into FormData.
       for (const key in combinedData) {
         if (Object.prototype.hasOwnProperty.call(combinedData, key)) {
-          formData.append(key, (combinedData as any)[key]);
+          const value = combinedData[key];
+          if (value !== undefined && value !== null) {
+            formData.append(key, String(value));
+          }
         }
       }
       await updateProfile({ id: user.id, data: formData, token });

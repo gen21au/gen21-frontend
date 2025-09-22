@@ -133,7 +133,10 @@ export class AuthService {
       const isValid = await TokenValidation.isTokenValid(accessToken);
       if (isValid) {
         store.dispatch(setCredentials({
-          user,
+          user: {
+            ...user,
+            avatarUrl: user.avatarUrl ?? 'images/avatar.png', // Provide a default if undefined
+          },
           accessToken,
           isAuthenticated: true,
         }));

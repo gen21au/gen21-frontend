@@ -99,7 +99,7 @@ export const apiSlice = createApi({
           method: 'POST',
           body: data,
           // If it's FormData, set content-type to undefined so browser sets it to multipart/form-data
-          headers: isFormData ? { 'Content-Type': 'undefined' as any } : undefined,
+          headers: isFormData ? { 'Content-Type': 'undefined' } : undefined,
         };
       },
       invalidatesTags: ['User'], // Invalidate 'User' tag on update

@@ -34,6 +34,7 @@ export interface User {
   media?: MediaItem[]; // Added media property
   has_media?: boolean; // Added has_media property
   [key: string]: unknown; // Added index signature
+  custom_fields?: { [key: string]: { value: string; view: string; name: string } } // Changed to an object for easier access
 }
 
   
