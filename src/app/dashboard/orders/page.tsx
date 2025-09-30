@@ -61,7 +61,7 @@ export default function OrderHistoryPage() {
                     {new Date(order.created_at).toLocaleDateString()}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    ${order.price}
+                    ৳{order.price}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm">
                     <span

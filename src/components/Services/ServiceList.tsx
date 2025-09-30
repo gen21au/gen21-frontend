@@ -214,7 +214,7 @@ const ServiceList: React.FC<ServiceListProps> = ({
                       </div>
                       <span className="text-gray-500 text-sm ml-1">({service.total_reviews})</span>
                       </div>
-                      <div className="font-bold text-lg text-blue-600">${service.price}</div>
+                      <div className="font-bold text-lg text-blue-600">৳{service.price}</div>
                     </div>
                   </div>
                 </div>
