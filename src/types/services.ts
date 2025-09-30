@@ -20,6 +20,10 @@ export interface CategoryType {
   color: string;
   has_media: boolean;
   featured: boolean;
+  description?: {
+    en: string;
+  };
+  faq?: string;
 }
 
 export interface EServiceReviewType {
@@ -125,4 +129,3 @@ export interface AllCategoryServicesResponse {
   data: CategoryWithServices[];
   message: string;
 }
-

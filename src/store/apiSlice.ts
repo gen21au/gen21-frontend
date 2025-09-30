@@ -85,6 +85,11 @@ export const apiSlice = createApi({
       query: () => API_ENDPOINTS.ALL_CATEGORY_SERVICES,
       transformResponse: (response: AllCategoryServicesResponse) => response.data,
     }),
+    // Single Category endpoint
+    getCategoryById: builder.query<CategoryType, number>({
+      query: (id) => `/categories/${id}?version=2`,
+      transformResponse: (response: { success: boolean; data: CategoryType; message: string }) => response.data,
+    }),
     // Orders endpoint
     getOrders: builder.query<Order[], string>({
       query: (token) => `${API_ENDPOINTS.ORDER_LIST}?api_token=${token}`,
@@ -117,6 +122,7 @@ export const {
   useGetCategoriesQuery,
   useGetServiceDetailsQuery,
   useGetAllCategoryServicesQuery,
+  useGetCategoryByIdQuery,
   useGetOrdersQuery,
   useUpdateProfileMutation,
  } = apiSlice;
