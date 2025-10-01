@@ -40,11 +40,13 @@ export default async function ServicePage({ params, searchParams }: ServicePageP
 
         // Map API data to Service interface
         service = {
+          id: eService.id,
           title: eService.name.en,
           price: eService.discount_price > 0 ? eService.discount_price : eService.price,
           description: eService.description.en.replace(/<[^>]*>/g, ''), // Strip HTML tags
           images: eService.media.length > 0 ? eService.media.map(m => m.url) : ['/service-thumb.png'],
           category: (eService.categories && eService.categories.length > 0) ? eService.categories[0].name.en : 'Home Services',
+          category_id: (eService.categories && eService.categories.length > 0) ? eService.categories[0].id : 0,
           features: features.length > 0 ? features : ['Professional service', 'Quality assurance'],
           availability: eService.available ? 'Available' : 'Currently unavailable',
           duration: eService.duration,
@@ -60,6 +62,7 @@ export default async function ServicePage({ params, searchParams }: ServicePageP
       console.error('Error fetching service data:', error);
       // Fallback to hardcoded data
       service = {
+        id: 0,
         title: 'Service Not Found',
         price: 0,
         description: 'Unable to load service details. Please try again later.',
@@ -67,6 +70,7 @@ export default async function ServicePage({ params, searchParams }: ServicePageP
         total_reviews: 0,
         images: ['/images/default-service.png'],
         category: 'Home Services',
+        category_id: 0,
         features: [],
         availability: 'Unavailable',
         duration: 'N/A',
@@ -77,6 +81,7 @@ export default async function ServicePage({ params, searchParams }: ServicePageP
   } else {
     // Invalid slug
     service = {
+      id: 0,
       title: 'Invalid Service',
       price: 0,
       description: 'The service slug is invalid.',
@@ -84,6 +89,7 @@ export default async function ServicePage({ params, searchParams }: ServicePageP
       total_reviews: 0,
       images: ['/images/default-service.png'],
       category: 'Home Services',
+      category_id: 0,
       features: [],
       availability: 'Unavailable',
       duration: 'N/A',

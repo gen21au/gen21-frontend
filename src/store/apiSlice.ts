@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { AuthResponse, ForgotPasswordRequest, LoginRequest, RegisterRequest, ResetPasswordRequest, User, UserRequest, ValidateTokenResponse } from '@/types/auth';
-import { CategoryType, FeatureServiceType, EServiceType, AllCategoryServicesResponse, CategoryWithServices } from '@/types/services';
+import { CategoryType, FeatureServiceType, EServiceType, AllCategoryServicesResponse, CategoryWithServices, AdvancedSearchResponse } from '@/types/services';
 import { Order } from '@/types/orders'; // Import Order type
 import { API_ENDPOINTS, BASE_API_URL } from "@/utils/api_endpoints";
 
@@ -90,6 +90,11 @@ export const apiSlice = createApi({
       query: (id) => `/categories/${id}?version=2`,
       transformResponse: (response: { success: boolean; data: CategoryType; message: string }) => response.data,
     }),
+    // Advanced Search endpoint
+    getAdvancedSearch: builder.query<AdvancedSearchResponse['data'], string>({
+      query: (keyword) => `${API_ENDPOINTS.ADVANCED_SEARCH}?version=2&keyword=${encodeURIComponent(keyword)}`,
+      transformResponse: (response: AdvancedSearchResponse) => response.data,
+    }),
     // Orders endpoint
     getOrders: builder.query<Order[], string>({
       query: (token) => `${API_ENDPOINTS.ORDER_LIST}?api_token=${token}`,
@@ -123,6 +128,7 @@ export const {
   useGetServiceDetailsQuery,
   useGetAllCategoryServicesQuery,
   useGetCategoryByIdQuery,
+  useGetAdvancedSearchQuery,
   useGetOrdersQuery,
   useUpdateProfileMutation,
  } = apiSlice;

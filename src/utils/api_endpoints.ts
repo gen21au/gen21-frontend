@@ -17,6 +17,7 @@ export const API_ENDPOINTS = {
     BLOGS: '/blogs?version=2',
     FAQS: '/faqs?version=2',
     ALL_CATEGORY_SERVICES: '/all-category-services?version=2',
+    ADVANCED_SEARCH: '/advanced-search',
     ORDER_LIST: '/order-list',
     PROFILE_UPDATE: '/users',
 }

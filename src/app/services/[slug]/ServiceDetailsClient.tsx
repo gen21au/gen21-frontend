@@ -9,6 +9,7 @@ import Reviews from '@/components/Services/Reviews';
 import Link from 'next/link';
 import { ServiceType } from '@/types/services';
 import Spinner from '@/components/Common/Spinner';
+import { CategoryService } from '@/services/categoryService';
 
 interface ServiceDetailsClientProps {
   serviceId: number;
@@ -36,11 +37,13 @@ export default function ServiceDetailsClient({ serviceId, initialService }: Serv
 
     // Map API data to Service interface
     service = {
+      id: eService.id,
       title: eService.name.en,
       price: eService.discount_price > 0 ? eService.discount_price : eService.price,
       description: eService.description.en.replace(/<[^>]*>/g, ''), // Strip HTML tags
       images: eService.media.length > 0 ? eService.media.map(m => m.url) : ['/images/default-service.png'],
       category: (eService.categories && eService.categories.length > 0) ? eService.categories[0].name.en : 'Home Services',
+      category_id: (eService.categories && eService.categories.length > 0) ? eService.categories[0].id : 0,
       features: features.length > 0 ? features : ['Professional service', 'Quality assurance'],
       availability: eService.available ? 'Available' : 'Currently unavailable',
       duration: eService.duration,
@@ -57,6 +60,7 @@ export default function ServiceDetailsClient({ serviceId, initialService }: Serv
 
   if (error) {
     service = {
+      id: 0,
       title: 'Service Not Found',
       price: 0,
       description: 'Unable to load service details. Please try again later.',
@@ -64,6 +68,7 @@ export default function ServiceDetailsClient({ serviceId, initialService }: Serv
       total_reviews: 0,
       images: ['/service-thumb.png'],
       category: 'Home Services',
+      category_id: 0,
       features: [],
       availability: 'Unavailable',
       duration: 'N/A',
@@ -82,7 +87,7 @@ export default function ServiceDetailsClient({ serviceId, initialService }: Serv
             <span className="mx-2">/</span>
             <Link href="/services" className="hover:text-blue-600">Services</Link>
             <span className="mx-2">/</span>
-            <Link href={`/services`} className="hover:text-blue-600">{service.category}</Link>
+            <Link href={`/category/` + CategoryService.generateCategorySlug(service.category, service.category_id)} className="hover:text-blue-600">{service.category}</Link>
             <span className="mx-2">/</span>
             <span className="text-gray-900 font-medium">{service.title}</span>
           </nav>

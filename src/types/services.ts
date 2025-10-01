@@ -102,6 +102,7 @@ export interface ServiceItem {
 }
 
 export interface ServiceType {
+  id: number;
   title: string;
   price: number;
   description: string;
@@ -113,7 +114,8 @@ export interface ServiceType {
   rate: number;
   total_reviews: number;
   warranty?: string;
-  category?: string;
+  category: string;
+  category_id: number;
 }
 
 export interface CategoryWithServices {
@@ -127,5 +129,14 @@ export interface CategoryWithServices {
 export interface AllCategoryServicesResponse {
   success: boolean;
   data: CategoryWithServices[];
+  message: string;
+}
+
+export interface AdvancedSearchResponse {
+  success: boolean;
+  data: {
+    categories: CategoryType[];
+    e_services: EServiceType[];
+  };
   message: string;
 }
