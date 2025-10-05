@@ -20,4 +20,5 @@ export const API_ENDPOINTS = {
     ADVANCED_SEARCH: '/advanced-search',
     ORDER_LIST: '/order-list',
     PROFILE_UPDATE: '/users',
+    PARTNER_REQUESTS: '/partner_requests',
 }

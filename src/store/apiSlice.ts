@@ -114,6 +114,15 @@ export const apiSlice = createApi({
       },
       invalidatesTags: ['User'], // Invalidate 'User' tag on update
     }),
+    // Partner Request endpoint
+    submitPartnerRequest: builder.mutation<{ message: string }, FormData>({
+      query: (formData) => ({
+        url: API_ENDPOINTS.PARTNER_REQUESTS,
+        method: 'POST',
+        body: formData,
+        // FormData will automatically set the correct content-type
+      }),
+    }),
   }),
 });
 
@@ -131,4 +140,5 @@ export const {
   useGetAdvancedSearchQuery,
   useGetOrdersQuery,
   useUpdateProfileMutation,
+  useSubmitPartnerRequestMutation,
  } = apiSlice;
