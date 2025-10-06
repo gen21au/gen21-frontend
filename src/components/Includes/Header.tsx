@@ -83,7 +83,7 @@ export default function Header() {
             <Link href="/faq" className="text-gray-600 hover:text-gray-900">
               FAQ
             </Link>
-            <Link href="/blog" className="text-gray-600 hover:text-gray-900">
+            <Link href="/blogs" className="text-gray-600 hover:text-gray-900">
               Blog
             </Link>
             <Link href="/contact" className="text-gray-600 hover:text-gray-900">

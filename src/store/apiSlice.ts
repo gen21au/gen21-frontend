@@ -3,6 +3,7 @@ import { AuthResponse, ForgotPasswordRequest, LoginRequest, RegisterRequest, Res
 import { CategoryType, FeatureServiceType, EServiceType, AllCategoryServicesResponse, CategoryWithServices, AdvancedSearchResponse } from '@/types/services';
 import { Order } from '@/types/orders'; // Import Order type
 import { FaqResponse } from '@/types/faq';
+import { BlogResponse } from '@/types/blog';
 import { API_ENDPOINTS, BASE_API_URL } from "@/utils/api_endpoints";
 
 
@@ -129,6 +130,16 @@ export const apiSlice = createApi({
       query: () => API_ENDPOINTS.FAQS,
       transformResponse: (response: FaqResponse) => response.data,
     }),
+    // Blogs endpoint
+    getBlogs: builder.query<BlogResponse['data'], { page?: number }>({
+      query: ({ page = 1 }) => `${API_ENDPOINTS.BLOGS}&page=${page}`,
+      transformResponse: (response: BlogResponse) => response.data,
+    }),
+    // Single Blog endpoint
+    getBlogBySlug: builder.query<BlogResponse['data']['data'][0], string>({
+      query: (slug) => `${API_ENDPOINTS.BLOGS}&slug=${slug}`,
+      transformResponse: (response: BlogResponse) => response.data.data[0],
+    }),
   }),
 });
 
@@ -148,4 +159,6 @@ export const {
   useUpdateProfileMutation,
   useSubmitPartnerRequestMutation,
   useGetFaqsQuery,
+  useGetBlogsQuery,
+  useGetBlogBySlugQuery,
  } = apiSlice;

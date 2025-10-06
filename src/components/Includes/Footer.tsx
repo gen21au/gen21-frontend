@@ -27,7 +27,7 @@ export default function Footer() {
             <h4 className="text-lg font-semibold">Company</h4>
             <ul className="space-y-2">
               <li><Link href="/about" className="text-gray-400 hover:text-white">About Us</Link></li>
-              <li><Link href="/blog" className="text-gray-400 hover:text-white">Blog</Link></li>
+              <li><Link href="/blogs" className="text-gray-400 hover:text-white">Blog</Link></li>
               <li><Link href="/careers" className="text-gray-400 hover:text-white">Careers</Link></li>
               <li><Link href="/contact" className="text-gray-400 hover:text-white">Contact</Link></li>
               <li><Link href="/become-partner" className="text-yellow-400 hover:text-yellow-300 font-semibold">Become a Partner</Link></li>
