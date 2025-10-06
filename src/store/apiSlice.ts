@@ -2,6 +2,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { AuthResponse, ForgotPasswordRequest, LoginRequest, RegisterRequest, ResetPasswordRequest, User, UserRequest, ValidateTokenResponse } from '@/types/auth';
 import { CategoryType, FeatureServiceType, EServiceType, AllCategoryServicesResponse, CategoryWithServices, AdvancedSearchResponse } from '@/types/services';
 import { Order } from '@/types/orders'; // Import Order type
+import { FaqResponse } from '@/types/faq';
 import { API_ENDPOINTS, BASE_API_URL } from "@/utils/api_endpoints";
 
 
@@ -123,6 +124,11 @@ export const apiSlice = createApi({
         // FormData will automatically set the correct content-type
       }),
     }),
+    // FAQs endpoint
+    getFaqs: builder.query<FaqResponse['data'], void>({
+      query: () => API_ENDPOINTS.FAQS,
+      transformResponse: (response: FaqResponse) => response.data,
+    }),
   }),
 });
 
@@ -141,4 +147,5 @@ export const {
   useGetOrdersQuery,
   useUpdateProfileMutation,
   useSubmitPartnerRequestMutation,
+  useGetFaqsQuery,
  } = apiSlice;
