@@ -2,6 +2,7 @@
 import { useRef } from 'react';
 import { useGetCategoriesQuery } from '@/store/apiSlice';
 import Link from 'next/link';
+import { CategoryService } from '@/services/categoryService';
 
 // Skeleton loader component for category cards
 const CategoryCardSkeleton = () => (
@@ -54,9 +55,10 @@ export default function ServiceCategoryCarousel() {
               has_media: boolean;
               featured: boolean;
             }) => (
-              <div
+              <Link
                 key={category.id}
-                className="flex-shrink-0 w-40 p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow"
+                href={`/category/${CategoryService.generateCategorySlug(category.name.en, category.id)}`}
+                className="flex-shrink-0 w-40 p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer"
                 style={{ borderColor: category.color }}
               >
                 <img
@@ -67,7 +69,7 @@ export default function ServiceCategoryCarousel() {
                 <h3 className="text-sm font-medium text-gray-900 text-center">
                   {category.name.en}
                 </h3>
-              </div>
+              </Link>
             ))}
 
             {/* More Button */}

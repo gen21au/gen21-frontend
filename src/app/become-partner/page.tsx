@@ -398,7 +398,7 @@ export default function BecomePartnerPage() {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="bg-indigo-600 text-white px-8 py-3 rounded-md hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
+                className="bg-indigo-600 text-white px-8 py-3 rounded-md hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium cursor-pointer"
               >
                 {isSubmitting ? 'Submitting...' : 'Submit Application'}
               </button>
