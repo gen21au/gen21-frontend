@@ -76,7 +76,7 @@ export default function Header() {
             <SearchInput />
           </div>
           
-          <div className="hidden md:flex space-x-8">
+          <div className="hidden md:flex items-center space-x-8">
             <Link href="/services" className="text-gray-600 hover:text-gray-900">
               Services
             </Link>
@@ -89,39 +89,39 @@ export default function Header() {
             <Link href="/contact" className="text-gray-600 hover:text-gray-900">
               Contact
             </Link>
-            
+
             {/* User avatar dropdown */}
             {!isAuthenticated ? (
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-4 ml-4">
                 <Link href="/login" className="text-gray-600 hover:text-blue-600 transition-colors">
                   Sign In
                 </Link>
-                <Link 
-                  href="/register" 
+                <Link
+                  href="/register"
                   className="bg-blue-600 text-white px-6 py-2 rounded-full hover:bg-blue-700 transition-colors"
                 >
                   Join Free
                 </Link>
               </div>
             ) : (
-              <div className="relative ml-4" ref={dropdownRef}>
-                <button 
+              <div className="relative" ref={dropdownRef}>
+                <button
                   onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                   className="flex items-center focus:outline-none"
                 >
-                  <img 
-                    src={user?.avatarUrl || '/avatar.png'} 
-                    alt="User avatar" 
+                  <img
+                    src={user?.avatarUrl || '/avatar.png'}
+                    alt="User avatar"
                     className="w-10 h-10 rounded-full border-2 border-gray-200"
                   />
                 </button>
-                
+
                 {isDropdownOpen && (
                   <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl py-2 z-50">
                     <Link href="/dashboard" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">
                       Dashboard
                     </Link>
-                    <button 
+                    <button
                       onClick={handleLogout}
                       className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
                     >
