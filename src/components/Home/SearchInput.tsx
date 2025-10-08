@@ -140,7 +140,7 @@ export default function SearchInput() {
                       <div className="flex-1">
                         <h4 className="font-medium text-gray-900">{service.name.en}</h4>
                         <p className="text-sm text-green-600 font-semibold">
-                          ${service.discount_price > 0 ? service.discount_price : service.price}
+                          ৳{service.discount_price > 0 ? service.discount_price : service.price}
                         </p>
                       </div>
                     </div>
