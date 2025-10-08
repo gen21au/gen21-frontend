@@ -14,7 +14,10 @@ interface FaqSectionProps {
 }
 
 export default function FaqSection({ faqs, title = "Frequently Asked Questions" }: FaqSectionProps = {}) {
+  // Always call hooks at the top level, before any conditional logic
   const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const { data: faqCategories, isLoading, error } = useGetFaqsQuery();
+  const [activeTab, setActiveTab] = useState<number>(0);
 
   // If faqs prop is provided, render static FAQs (for service details)
   if (faqs) {
@@ -60,10 +63,6 @@ export default function FaqSection({ faqs, title = "Frequently Asked Questions" 
       </div>
     );
   }
-
-  // Dynamic FAQs from API
-  const { data: faqCategories, isLoading, error } = useGetFaqsQuery();
-  const [activeTab, setActiveTab] = useState<number>(0);
 
   if (isLoading) {
     return (

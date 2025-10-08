@@ -125,7 +125,7 @@ export default function BecomePartnerPage() {
         }
       });
 
-      const result = await submitPartnerRequest(submitData).unwrap();
+      await submitPartnerRequest(submitData).unwrap();
 
       setSubmitSuccess(true);
       // Reset form
@@ -143,9 +143,10 @@ export default function BecomePartnerPage() {
         note: ''
       });
       setErrors({});
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error submitting form:', error);
-      setErrors({ submit: error?.data?.message || error?.message || 'Failed to submit application. Please try again.' });
+      const errorMessage = error instanceof Error ? error.message : 'Failed to submit application. Please try again.';
+      setErrors({ submit: errorMessage });
     }
   };
 
@@ -192,18 +193,18 @@ export default function BecomePartnerPage() {
                 Partner Type *
               </label>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                {[
-                  { value: 'individual', label: 'Individual' },
-                  { value: 'freelancer', label: 'Freelancer' },
-                  { value: 'company', label: 'Company' }
-                ].map((type) => (
+                {([
+                  { value: 'individual' as const, label: 'Individual' },
+                  { value: 'freelancer' as const, label: 'Freelancer' },
+                  { value: 'company' as const, label: 'Company' }
+                ] as const).map((type) => (
                   <label key={type.value} className="relative">
                     <input
                       type="radio"
                       name="partner_type"
                       value={type.value}
                       checked={formData.partner_type === type.value}
-                      onChange={() => handlePartnerTypeChange(type.value as any)}
+                      onChange={() => handlePartnerTypeChange(type.value)}
                       className="sr-only peer"
                     />
                     <div className="p-4 border-2 border-gray-200 rounded-lg cursor-pointer peer-checked:border-indigo-500 peer-checked:bg-indigo-50 hover:border-gray-300 transition-colors">

@@ -9,7 +9,7 @@ export interface BlogMedia {
   mime_type: string;
   disk: string;
   size: number;
-  manipulations: any[];
+//   manipulations: any[];
   custom_properties: {
     uuid: string;
     user_id: number;
@@ -34,7 +34,7 @@ export interface Blog {
   slug: string;
   image: string | null;
   created_at: string;
-  custom_fields: any[];
+//   custom_fields: any[];
   has_media: boolean;
   media: BlogMedia[];
 }

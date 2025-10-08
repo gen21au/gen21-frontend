@@ -46,7 +46,7 @@ const BlogDetailsPage = () => {
         <div className="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-16">
           <div className="container mx-auto px-4">
             <h1 className="text-4xl font-bold mb-4">Blog Not Found</h1>
-            <p className="text-lg">The blog post you're looking for doesn't exist.</p>
+            <p className="text-lg">The blog post you&apos;re looking for doesn&apos;t exist.</p>
           </div>
         </div>
 
@@ -68,7 +68,7 @@ const BlogDetailsPage = () => {
           <div className="max-w-md mx-auto">
             <h2 className="text-2xl font-bold text-gray-900 mb-4">Oops! Blog Not Found</h2>
             <p className="text-gray-600 mb-8">
-              The blog post you're looking for might have been moved or doesn't exist.
+              The blog post you&apos;re looking for might have been moved or doesn&apos;t exist.
             </p>
             <Link
               href="/blogs"
