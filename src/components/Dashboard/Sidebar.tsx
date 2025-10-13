@@ -5,11 +5,11 @@ import { usePathname } from 'next/navigation'
 
 const menuItems = [
   { name: 'Dashboard', path: '/dashboard' },
-  { name: 'Favourite Services', path: '/dashboard/favorites' },
+  // { name: 'Favourite Services', path: '/dashboard/favorites' },
   { name: 'Order History', path: '/dashboard/orders' },
   { name: 'My Addresses', path: '/dashboard/addresses' },
   { name: 'Profile', path: '/dashboard/profile' },
-  { name: 'Change Password', path: '/dashboard/change-password' },
+  // { name: 'Change Password', path: '/dashboard/profile' },
 ]
 
 export default function DashboardSidebar() {

@@ -4,6 +4,7 @@ import { CategoryType, FeatureServiceType, EServiceType, AllCategoryServicesResp
 import { Order } from '@/types/orders'; // Import Order type
 import { FaqResponse } from '@/types/faq';
 import { BlogResponse } from '@/types/blog';
+import { Address, CreateAddressRequest, UpdateAddressRequest, AddressResponse } from '@/types/address';
 import { API_ENDPOINTS, BASE_API_URL } from "@/utils/api_endpoints";
 
 
@@ -17,7 +18,7 @@ export const apiSlice = createApi({
     //   return headers;
     // }
   }),
-  tagTypes: ['User', 'Order'], // Define tag types
+  tagTypes: ['User', 'Order', 'Address'], // Define tag types
   endpoints: (builder) => ({
     // Feature Services endpoint
     getFeatureServices: builder.query<FeatureServiceType[], void>({
@@ -140,6 +141,37 @@ export const apiSlice = createApi({
       query: (slug) => `${API_ENDPOINTS.BLOGS}&slug=${slug}`,
       transformResponse: (response: BlogResponse) => response.data.data[0],
     }),
+    // Address endpoints
+    getAddresses: builder.query<Address[], string>({
+      query: (token) => `${API_ENDPOINTS.ADDRESS}?version=2&api_token=${token}`,
+      transformResponse: (response: AddressResponse) => Array.isArray(response.data) ? response.data : [response.data],
+      providesTags: ['Address'],
+    }),
+    createAddress: builder.mutation<Address, { data: CreateAddressRequest; token: string }>({
+      query: ({ data, token }) => ({
+        url: `${API_ENDPOINTS.ADDRESS}?version=2&api_token=${token}`,
+        method: 'POST',
+        body: data,
+      }),
+      transformResponse: (response: AddressResponse) => response.data as Address,
+      invalidatesTags: ['Address'],
+    }),
+    updateAddress: builder.mutation<Address, { id: number; data: UpdateAddressRequest; token: string }>({
+      query: ({ id, data, token }) => ({
+        url: `${API_ENDPOINTS.ADDRESS}/${id}?version=2&api_token=${token}`,
+        method: 'PUT',
+        body: data,
+      }),
+      transformResponse: (response: AddressResponse) => response.data as Address,
+      invalidatesTags: ['Address'],
+    }),
+    deleteAddress: builder.mutation<{ message: string }, { id: number; token: string }>({
+      query: ({ id, token }) => ({
+        url: `${API_ENDPOINTS.ADDRESS}/${id}?version=2&api_token=${token}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['Address'],
+    }),
   }),
 });
 
@@ -161,4 +193,8 @@ export const {
   useGetFaqsQuery,
   useGetBlogsQuery,
   useGetBlogBySlugQuery,
+  useGetAddressesQuery,
+  useCreateAddressMutation,
+  useUpdateAddressMutation,
+  useDeleteAddressMutation,
  } = apiSlice;
