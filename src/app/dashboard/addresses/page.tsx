@@ -28,10 +28,12 @@ export default function AddressesPage() {
   const [formData, setFormData] = useState({
     description: '',
     address: '',
+    latitude: '',
+    longitude: '',
   });
 
   const resetForm = () => {
-    setFormData({ description: '', address: '' });
+    setFormData({ description: '', address: '', latitude: '', longitude: '' });
     setEditingAddress(null);
   };
 
@@ -40,6 +42,8 @@ export default function AddressesPage() {
       setFormData({
         description: address.description || '',
         address: address.address,
+        latitude: address.latitude.toString(),
+        longitude: address.longitude.toString(),
       });
       setEditingAddress(address.id);
     } else {
@@ -120,7 +124,7 @@ export default function AddressesPage() {
         <h1 className="text-3xl font-bold">My Addresses</h1>
         <button
           onClick={() => handleOpenModal()}
-          className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+          className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors cursor-pointer"
         >
           Add New Address
         </button>
@@ -147,14 +151,14 @@ export default function AddressesPage() {
               <div className="flex space-x-2 mt-4">
                 <button
                   onClick={() => handleOpenModal(address)}
-                  className="bg-yellow-500 text-white px-3 py-1 rounded text-sm hover:bg-yellow-600 transition-colors"
+                  className="bg-yellow-500 text-white px-3 py-1 rounded text-sm hover:bg-yellow-600 transition-colors cursor-pointer"
                   disabled={isUpdating}
                 >
                   Edit
                 </button>
                 <button
                   onClick={() => handleDeleteClick(address)}
-                  className="bg-red-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600 transition-colors"
+                  className="bg-red-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600 transition-colors cursor-pointer"
                   disabled={isDeleting}
                 >
                   Delete
@@ -202,6 +206,48 @@ export default function AddressesPage() {
                   required
                 />
               </div>
+              {editingAddress ? (
+                <>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label htmlFor="latitude" className="block text-sm font-medium text-gray-700">
+                        Latitude
+                      </label>
+                      <input
+                        type="number"
+                        step="any"
+                        name="latitude"
+                        id="latitude"
+                        value={formData.latitude}
+                        onChange={handleInputChange}
+                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                        placeholder="e.g., 23.8103"
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor="longitude" className="block text-sm font-medium text-gray-700">
+                        Longitude
+                      </label>
+                      <input
+                        type="number"
+                        step="any"
+                        name="longitude"
+                        id="longitude"
+                        value={formData.longitude}
+                        onChange={handleInputChange}
+                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                        placeholder="e.g., 90.4125"
+                      />
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <div className="bg-gray-50 p-3 rounded-md">
+                  <p className="text-sm text-gray-600">
+                    <span className="font-medium">Coordinates will be automatically detected</span> when you create the address.
+                  </p>
+                </div>
+              )}
               <div className="flex justify-end space-x-2">
                 <button
                   type="button"
