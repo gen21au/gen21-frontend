@@ -23,4 +23,5 @@ export const API_ENDPOINTS = {
     PARTNER_REQUESTS: '/partner_requests',
     FAQS: '/web-faqs?version=2',
     ADDRESS: '/addresses',
+    
 }
