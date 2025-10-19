@@ -1,21 +1,23 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store/store';
 import { useGetAddressesQuery } from '@/store/apiSlice';
 import LoginModal from '@/components/Common/LoginModal';
+import AddAddressModal from './AddAddressModal';
 import toast from 'react-hot-toast';
 
 export default function OrderForm() {
   const { isAuthenticated, accessToken, user } = useSelector((state: RootState) => state.auth);
   const [showLoginModal, setShowLoginModal] = useState(false);
+  const [showAddAddressModal, setShowAddAddressModal] = useState(false);
   const [formData, setFormData] = useState({
-    selectedAddress: '',
+    address: '',
     scheduleType: 'asap', // 'asap' or 'schedule'
     preferredDate: '',
     preferredTime: '',
-    couponCode: '',
+    coupon_code: '',
     notes: ''
   });
   const [couponApplied, setCouponApplied] = useState(false);
@@ -43,7 +45,7 @@ export default function OrderForm() {
   };
 
   const applyCoupon = async () => {
-    if (!formData.couponCode.trim()) {
+    if (!formData.coupon_code.trim()) {
       toast.error('Please enter a coupon code');
       return;
     }
@@ -54,7 +56,7 @@ export default function OrderForm() {
     }
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_API_URL || 'https://app.gen21.com.au/api'}/coupons?api_token=${accessToken}&version=2&code=${formData.couponCode}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_API_URL || 'https://app.gen21.com.au/api'}/coupons?api_token=${accessToken}&version=2&code=${formData.coupon_code}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -87,7 +89,7 @@ export default function OrderForm() {
       return;
     }
 
-    if (!formData.selectedAddress) {
+    if (!formData.address) {
       toast.error('Please select an address');
       return;
     }
@@ -148,13 +150,13 @@ export default function OrderForm() {
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Address Selection */}
           <div>
-            <label htmlFor="selectedAddress" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="address" className="block text-sm font-medium text-gray-700 mb-1">
               Select Address
             </label>
             <select
-              id="selectedAddress"
-              name="selectedAddress"
-              value={formData.selectedAddress}
+              id="address"
+              name="address"
+              value={formData.address}
               onChange={handleChange}
               className="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
               required
@@ -169,6 +171,15 @@ export default function OrderForm() {
                 </option>
               ))}
             </select>
+            <div className="mt-1 text-right">
+              <button
+                type="button"
+                onClick={() => setShowAddAddressModal(true)}
+                className="text-sm text-blue-600 hover:text-blue-800 font-medium"
+              >
+                + Add new address
+              </button>
+            </div>
           </div>
 
           {/* Time Schedule Selection */}
@@ -247,15 +258,15 @@ export default function OrderForm() {
 
           {/* Coupon Code */}
           <div>
-            <label htmlFor="couponCode" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="coupon_code" className="block text-sm font-medium text-gray-700 mb-1">
               Coupon Code (Optional)
             </label>
             <div className="flex gap-2">
               <input
                 type="text"
-                id="couponCode"
-                name="couponCode"
-                value={formData.couponCode}
+                id="coupon_code"
+                name="coupon_code"
+                value={formData.coupon_code}
                 onChange={handleChange}
                 className="flex-1 p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                 placeholder="Enter coupon code"
@@ -308,6 +319,15 @@ export default function OrderForm() {
       <LoginModal
         isOpen={showLoginModal}
         onClose={() => setShowLoginModal(false)}
+      />
+
+      <AddAddressModal
+        isOpen={showAddAddressModal}
+        onClose={() => setShowAddAddressModal(false)}
+        onAddressAdded={() => {
+          // Refetch addresses after adding new one
+          // This will be handled by RTK Query cache invalidation
+        }}
       />
     </>
   );
