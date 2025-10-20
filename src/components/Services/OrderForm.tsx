@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store/store';
-import { useGetAddressesQuery, useCreateBookingRequestMutation } from '@/store/apiSlice';
+import { useGetAddressesQuery, useCreateBookingRequestMutation, useInitiatePaymentMutation } from '@/store/apiSlice';
 import { BookingRequestPayload } from '@/services/bookingService';
 import LoginModal from '@/components/Common/LoginModal';
 import AddAddressModal from './AddAddressModal';
@@ -35,8 +35,9 @@ export default function OrderForm( { service }: OrderServiceProps) {
     skip: !isAuthenticated || !accessToken,
   });
 
-  // Booking mutation
+  // Booking mutations
   const [createBookingRequest, { isLoading: isBookingLoading }] = useCreateBookingRequestMutation();
+  const [initiatePayment, { isLoading: isPaymentLoading }] = useInitiatePaymentMutation();
 
   // Check authentication on mount
   // useEffect(() => {
@@ -151,19 +152,33 @@ export default function OrderForm( { service }: OrderServiceProps) {
     };
 
     try {
-      const result = await createBookingRequest({
+      // Step 1: Create booking request
+      const bookingResult = await createBookingRequest({
         payload: bookingPayload,
         token: accessToken,
       }).unwrap();
 
-      if (result.success && result.data?.GatewayPageURL) {
+      if (!bookingResult.success || !bookingResult.data?.booking_id) {
+        toast.error(bookingResult.message || 'Failed to create booking request');
+        return;
+      }
+
+      const bookingId = bookingResult.data.booking_id.toString();
+
+      // Step 2: Initiate payment
+      const paymentResult = await initiatePayment({
+        bookingId,
+        token: accessToken,
+      }).unwrap();
+
+      if (paymentResult.success && paymentResult.data?.GatewayPageURL) {
         // Redirect to SSLCommerz payment gateway
-        window.location.href = result.data.GatewayPageURL;
+        window.location.href = paymentResult.data.GatewayPageURL;
       } else {
-        toast.error(result.message || 'Failed to create booking request');
+        toast.error(paymentResult.message || 'Failed to initiate payment');
       }
     } catch (error) {
-      toast.error('Failed to create booking request. Please try again.');
+      toast.error('Failed to process booking. Please try again.');
     }
   };
 
@@ -177,7 +192,7 @@ export default function OrderForm( { service }: OrderServiceProps) {
             <p className="text-gray-600 mb-4">Please login to book this service</p>
             <button
               onClick={() => setShowLoginModal(true)}
-              className="bg-blue-600 text-white px-6 py-2 rounded-md font-medium hover:bg-blue-700 transition-colors"
+              className="bg-blue-600 text-white px-6 py-2 rounded-md font-medium hover:bg-blue-700 transition-colors cursor-pointer"
             >
               Login to Continue
             </button>
@@ -224,7 +239,7 @@ export default function OrderForm( { service }: OrderServiceProps) {
               <button
                 type="button"
                 onClick={() => setShowAddAddressModal(true)}
-                className="text-sm text-blue-600 hover:text-blue-800 font-medium"
+                className="text-sm text-blue-600 hover:text-blue-800 font-medium cursor-pointer"
               >
                 + Add new address
               </button>
@@ -323,7 +338,7 @@ export default function OrderForm( { service }: OrderServiceProps) {
               <button
                 type="button"
                 onClick={applyCoupon}
-                className="px-4 py-2 bg-green-600 text-white rounded-md font-medium hover:bg-green-700 transition-colors focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+                className="px-4 py-2 bg-green-600 text-white rounded-md font-medium hover:bg-green-700 transition-colors focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 cursor-pointer"
               >
                 Apply
               </button>
@@ -354,10 +369,10 @@ export default function OrderForm( { service }: OrderServiceProps) {
           {/* Submit Button */}
           <button
             type="submit"
-            disabled={isBookingLoading}
-            className="w-full bg-blue-600 text-white py-3 rounded-md font-medium hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+            disabled={isBookingLoading || isPaymentLoading}
+            className="w-full bg-blue-600 text-white py-3 rounded-md font-medium hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {isBookingLoading ? 'Processing...' : 'Pay & Book Now'}
+            {(isBookingLoading || isPaymentLoading) ? 'Processing...' : 'Pay & Book Now'}
           </button>
 
           <p className="text-xs text-gray-500 text-center mt-2">

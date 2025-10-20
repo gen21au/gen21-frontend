@@ -34,6 +34,15 @@ export interface BookingResponse {
   success: boolean;
   message: string;
   data?: {
+    booking_id: number;
+    order_id: number;
+  };
+}
+
+export interface InitiatePaymentResponse {
+  success: boolean;
+  message: string;
+  data?: {
     tran_id: string;
     GatewayPageURL: string;
   };
@@ -65,6 +74,27 @@ export class BookingServiceAPI {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    return await response.json();
+  }
+
+  static async initiatePayment(
+    bookingId: string,
+    token: string
+  ): Promise<InitiatePaymentResponse> {
+    const url = `${BASE_API_URL}${API_ENDPOINTS.INITIATE_PAYMENT}?api_token=${token}`;
+
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ booking_id: bookingId }),
     });
 
     if (!response.ok) {

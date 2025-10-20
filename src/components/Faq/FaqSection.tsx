@@ -32,7 +32,7 @@ export default function FaqSection({ faqs, title = "Frequently Asked Questions" 
               className="border border-gray-200 rounded-lg overflow-hidden transition-all duration-200 hover:shadow-md"
             >
               <button
-                className={`w-full text-left py-4 px-6 flex justify-between items-center ${openIndex === index ? 'bg-blue-50' : 'bg-white hover:bg-gray-50'}`}
+                className={`w-full text-left py-4 px-6 flex justify-between items-center cursor-pointer ${openIndex === index ? 'bg-blue-50' : 'bg-white hover:bg-gray-50'}`}
                 onClick={() => setOpenIndex(openIndex === index ? null : index)}
               >
                 <h3 className="text-lg font-semibold text-gray-800">{item.question}</h3>
@@ -104,7 +104,7 @@ export default function FaqSection({ faqs, title = "Frequently Asked Questions" 
         {faqCategories.map((category: FaqCategory, index: number) => (
           <button
             key={category.id}
-            className={`py-2 px-4 font-medium text-sm border-b-2 transition-colors ${
+            className={`py-2 px-4 font-medium text-sm border-b-2 transition-colors cursor-pointer ${
               activeTab === index
                 ? 'border-blue-500 text-blue-600'
                 : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
@@ -127,7 +127,7 @@ export default function FaqSection({ faqs, title = "Frequently Asked Questions" 
             className="border border-gray-200 rounded-lg overflow-hidden transition-all duration-200 hover:shadow-md"
           >
             <button
-              className={`w-full text-left py-4 px-6 flex justify-between items-center ${openIndex === index ? 'bg-blue-50' : 'bg-white hover:bg-gray-50'}`}
+              className={`w-full text-left py-4 px-6 flex justify-between items-center cursor-pointer ${openIndex === index ? 'bg-blue-50' : 'bg-white hover:bg-gray-50'}`}
               onClick={() => setOpenIndex(openIndex === index ? null : index)}
             >
               <h3 className="text-lg font-semibold text-gray-800" dangerouslySetInnerHTML={{ __html: item.question.en }} />

@@ -169,11 +169,11 @@ const ServiceList: React.FC<ServiceListProps> = ({
               servicesByCategory[categoryId]
                 .slice(0, visibleServicesCount[categoryId] || initialServicesPerCategory)
                 .map((service) => (
-              <Link 
+              <Link
                 // href={`/services/${service.title.toLowerCase().replace(/\s+/g, '-')}`}
                 href={`/services/${generateSlug(service.title, service.id)}`}
-                key={service.id} 
-                className="group"
+                key={service.id}
+                className="group cursor-pointer"
               >
                 <div className="bg-white rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:shadow-lg h-full flex flex-col">
                   <div className="relative">
@@ -226,9 +226,9 @@ const ServiceList: React.FC<ServiceListProps> = ({
           {/* Load More Button */}
           {servicesByCategory[categoryId].length > (visibleServicesCount[categoryId] || initialServicesPerCategory) && (
             <div className="mt-8 text-center">
-              <button 
+              <button
                 onClick={() => handleLoadMore(categoryId)}
-                className="bg-white border border-blue-500 text-blue-600 hover:bg-blue-50 font-medium py-2 px-6 rounded-md transition-colors"
+                className="bg-white border border-blue-500 text-blue-600 hover:bg-blue-50 font-medium py-2 px-6 rounded-md transition-colors cursor-pointer"
               >
                 Load More Services
               </button>

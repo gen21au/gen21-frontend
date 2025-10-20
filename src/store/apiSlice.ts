@@ -5,7 +5,7 @@ import { Order } from '@/types/orders'; // Import Order type
 import { FaqResponse } from '@/types/faq';
 import { BlogResponse } from '@/types/blog';
 import { Address, CreateAddressRequest, UpdateAddressRequest, AddressResponse } from '@/types/address';
-import { BookingRequestPayload, BookingResponse, PaymentStatusResponse } from '@/services/bookingService';
+import { BookingRequestPayload, BookingResponse, InitiatePaymentResponse, PaymentStatusResponse } from '@/services/bookingService';
 import { API_ENDPOINTS, BASE_API_URL } from "@/utils/api_endpoints";
 
 
@@ -181,8 +181,19 @@ export const apiSlice = createApi({
         body: payload,
       }),
     }),
+    initiatePayment: builder.mutation<InitiatePaymentResponse, { bookingId: string; token: string }>({
+      query: ({ bookingId, token }) => ({
+        url: `${API_ENDPOINTS.INITIATE_PAYMENT}?api_token=${token}`,
+        method: 'POST',
+        body: {
+          booking_id: bookingId,
+          type: "booking",
+          platform: "web",
+        },
+      }),
+    }),
     getPaymentStatus: builder.query<PaymentStatusResponse, { bookingId: string; token: string }>({
-      query: ({ bookingId, token }) => `/sslcommerz_payment/status/${bookingId}?api_token=${token}`,
+      query: ({ bookingId, token }) => `${API_ENDPOINTS.PAYMENT_STATUS}/${bookingId}?api_token=${token}`,
     }),
   }),
 });
@@ -210,5 +221,6 @@ export const {
   useUpdateAddressMutation,
   useDeleteAddressMutation,
   useCreateBookingRequestMutation,
+  useInitiatePaymentMutation,
   useGetPaymentStatusQuery,
  } = apiSlice;

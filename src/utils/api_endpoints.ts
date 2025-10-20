@@ -25,5 +25,5 @@ export const API_ENDPOINTS = {
     ADDRESS: '/addresses',
     BOOKING_REQUEST: '/booking-request',
     INITIATE_PAYMENT: '/sslcommerz_payment/initiate',
-
+    PAYMENT_STATUS: '/sslcommerz_payment/status',
 }

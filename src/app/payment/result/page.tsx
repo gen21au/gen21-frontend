@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store/store';
@@ -12,6 +12,7 @@ export default function PaymentResultPage() {
   const { accessToken } = useSelector((state: RootState) => state.auth);
   const [bookingId, setBookingId] = useState<string>('');
   const [status, setStatus] = useState<string>('');
+  const initialToastShownRef = useRef<boolean>(false);
 
   // Get payment status
   const { data: paymentStatus, isLoading } = useGetPaymentStatusQuery(
@@ -34,10 +35,12 @@ export default function PaymentResultPage() {
     }
 
     // Show initial message based on status
-    if (statusParam === 'success') {
+    if (statusParam === 'success' && !initialToastShownRef.current) {
       toast.success('Payment initiated successfully! Verifying payment status...');
-    } else if (statusParam === 'failed') {
+      initialToastShownRef.current = true;
+    } else if (statusParam === 'failed' && !initialToastShownRef.current) {
       toast.error('Payment failed. Please try again.');
+      initialToastShownRef.current = true;
     }
   }, []);
 
@@ -50,9 +53,9 @@ export default function PaymentResultPage() {
         if (actualStatus === 'completed') {
           toast.success('Payment completed successfully!');
           // Redirect to dashboard or booking details
-          setTimeout(() => {
-            router.push('/dashboard/orders');
-          }, 2000);
+          // setTimeout(() => {
+          //   router.push('/dashboard/orders');
+          // }, 2000);
         } else if (actualStatus === 'pending') {
           toast.loading('Payment is being processed. Please wait...');
         } else if (actualStatus === 'failed') {
@@ -132,13 +135,13 @@ export default function PaymentResultPage() {
             <div className="flex space-x-3">
               <button
                 onClick={() => router.push('/dashboard/orders')}
-                className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-md font-medium hover:bg-blue-700 transition-colors"
+                className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-md font-medium hover:bg-blue-700 transition-colors cursor-pointer"
               >
                 View Orders
               </button>
               <button
                 onClick={() => router.push('/')}
-                className="flex-1 bg-gray-200 text-gray-800 py-2 px-4 rounded-md font-medium hover:bg-gray-300 transition-colors"
+                className="flex-1 bg-gray-200 text-gray-800 py-2 px-4 rounded-md font-medium hover:bg-gray-300 transition-colors cursor-pointer"
               >
                 Go Home
               </button>

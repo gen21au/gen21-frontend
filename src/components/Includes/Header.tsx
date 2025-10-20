@@ -77,28 +77,28 @@ export default function Header() {
           </div>
           
           <div className="hidden md:flex items-center space-x-8">
-            <Link href="/services" className="text-gray-600 hover:text-gray-900">
+            <Link href="/services" className="text-gray-600 hover:text-gray-900 cursor-pointer">
               Services
             </Link>
-            <Link href="/faq" className="text-gray-600 hover:text-gray-900">
+            <Link href="/faq" className="text-gray-600 hover:text-gray-900 cursor-pointer">
               FAQ
             </Link>
-            <Link href="/blogs" className="text-gray-600 hover:text-gray-900">
+            <Link href="/blogs" className="text-gray-600 hover:text-gray-900 cursor-pointer">
               Blog
             </Link>
-            <Link href="/contact" className="text-gray-600 hover:text-gray-900">
+            <Link href="/contact" className="text-gray-600 hover:text-gray-900 cursor-pointer">
               Contact
             </Link>
 
             {/* User avatar dropdown */}
             {!isAuthenticated ? (
               <div className="flex items-center gap-4 ml-4">
-                <Link href="/login" className="text-gray-600 hover:text-blue-600 transition-colors">
+                <Link href="/login" className="text-gray-600 hover:text-blue-600 transition-colors cursor-pointer">
                   Sign In
                 </Link>
                 <Link
                   href="/register"
-                  className="bg-blue-600 text-white px-6 py-2 rounded-full hover:bg-blue-700 transition-colors"
+                  className="bg-blue-600 text-white px-6 py-2 rounded-full hover:bg-blue-700 transition-colors cursor-pointer"
                 >
                   Join Free
                 </Link>
@@ -107,7 +107,7 @@ export default function Header() {
               <div className="relative" ref={dropdownRef}>
                 <button
                   onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                  className="flex items-center focus:outline-none"
+                  className="flex items-center focus:outline-none cursor-pointer"
                 >
                   <img
                     src={user?.avatarUrl || '/avatar.png'}
@@ -118,12 +118,12 @@ export default function Header() {
 
                 {isDropdownOpen && (
                   <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl py-2 z-50">
-                    <Link href="/dashboard" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">
+                    <Link href="/dashboard" className="block px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer">
                       Dashboard
                     </Link>
                     <button
                       onClick={handleLogout}
-                      className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
+                      className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer"
                     >
                       Logout
                     </button>
@@ -133,7 +133,7 @@ export default function Header() {
             )}
           </div>
 
-          <button className="md:hidden p-2 text-gray-600">
+          <button className="md:hidden p-2 text-gray-600 cursor-pointer">
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
             </svg>
