@@ -3,12 +3,19 @@
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store/store';
-import { useGetAddressesQuery } from '@/store/apiSlice';
+import { useGetAddressesQuery, useCreateBookingRequestMutation } from '@/store/apiSlice';
+import { BookingRequestPayload } from '@/services/bookingService';
 import LoginModal from '@/components/Common/LoginModal';
 import AddAddressModal from './AddAddressModal';
 import toast from 'react-hot-toast';
+import { ServiceType } from '@/types/services';
+import { timeSlots } from '@/utils/constants';
 
-export default function OrderForm() {
+interface OrderServiceProps {
+  service: ServiceType;
+}
+
+export default function OrderForm( { service }: OrderServiceProps) {
   const { isAuthenticated, accessToken, user } = useSelector((state: RootState) => state.auth);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showAddAddressModal, setShowAddAddressModal] = useState(false);
@@ -27,6 +34,9 @@ export default function OrderForm() {
   const { data: addresses = [], isLoading: addressesLoading } = useGetAddressesQuery(accessToken || '', {
     skip: !isAuthenticated || !accessToken,
   });
+
+  // Booking mutation
+  const [createBookingRequest, { isLoading: isBookingLoading }] = useCreateBookingRequestMutation();
 
   // Check authentication on mount
   // useEffect(() => {
@@ -81,7 +91,7 @@ export default function OrderForm() {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!isAuthenticated) {
@@ -99,25 +109,64 @@ export default function OrderForm() {
       return;
     }
 
-    // Here you would submit the order data to your backend
-    console.log('Submitting order with data:', {
-      ...formData,
-      userId: user?.id,
-      token: accessToken,
-      couponApplied,
-      couponDiscount
-    });
+    if (!accessToken) {
+      toast.error('Authentication token not found');
+      return;
+    }
 
-    toast.success('Order placed successfully!');
-    // Reset form or redirect
+    // Find selected address
+    const selectedAddress = addresses.find(addr => addr.id.toString() === formData.address);
+    if (!selectedAddress) {
+      toast.error('Selected address not found');
+      return;
+    }
+
+    // Prepare booking payload
+    const bookingPayload: BookingRequestPayload = {
+      coupon_code: couponApplied ? formData.coupon_code : undefined,
+      note: formData.notes || undefined,
+      address: {
+        id: selectedAddress.id.toString(),
+        description: selectedAddress.description || '',
+        address: selectedAddress.address,
+        latitude: selectedAddress.latitude,
+        longitude: selectedAddress.longitude,
+        default: false, // You can set this based on user preference
+        user_id: selectedAddress.user_id.toString(),
+      },
+      service: [
+        {
+          id: null,
+          service_type: 'service',
+          service_name: service.title, // This should come from service details
+          e_service_id: service.id.toString(),
+          name: service.title, // This should come from service details
+          image_url: service?.images?.[0] || '', // This should come from service details
+          price: service?.price || 0, // This should come from service details
+          minimum_unit: '1', //service?.minimum_unit,
+          added_unit: '1',
+          booking_at: new Date().toISOString(),
+        }
+      ]
+    };
+
+    try {
+      const result = await createBookingRequest({
+        payload: bookingPayload,
+        token: accessToken,
+      }).unwrap();
+
+      if (result.success && result.data?.GatewayPageURL) {
+        // Redirect to SSLCommerz payment gateway
+        window.location.href = result.data.GatewayPageURL;
+      } else {
+        toast.error(result.message || 'Failed to create booking request');
+      }
+    } catch (error) {
+      toast.error('Failed to create booking request. Please try again.');
+    }
   };
 
-  // Available time slots
-  const timeSlots = [
-    '09:00 AM', '10:00 AM', '11:00 AM', '12:00 PM',
-    '01:00 PM', '02:00 PM', '03:00 PM', '04:00 PM', '05:00 PM', '06:00 PM', '07:00 PM', '08:00 PM',
-    '09:00 PM', '10:00 PM',
-  ];
 
   if (!isAuthenticated) {
     return (
@@ -305,9 +354,10 @@ export default function OrderForm() {
           {/* Submit Button */}
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white py-3 rounded-md font-medium hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            disabled={isBookingLoading}
+            className="w-full bg-blue-600 text-white py-3 rounded-md font-medium hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Pay & Book Now
+            {isBookingLoading ? 'Processing...' : 'Pay & Book Now'}
           </button>
 
           <p className="text-xs text-gray-500 text-center mt-2">

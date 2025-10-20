@@ -128,7 +128,7 @@ export default function ServiceDetailsClient({ serviceId, initialService }: Serv
           {/* Right column - Order form */}
           <div className="lg:col-span-1">
             <div className="sticky top-8">
-              <OrderForm />
+              <OrderForm service={service} />
 
               {/* Trust badges */}
               <div className="mt-6 bg-white rounded-lg shadow-sm p-6">

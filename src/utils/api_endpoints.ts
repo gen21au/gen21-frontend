@@ -23,5 +23,7 @@ export const API_ENDPOINTS = {
     PARTNER_REQUESTS: '/partner_requests',
     FAQS: '/web-faqs?version=2',
     ADDRESS: '/addresses',
-    
+    BOOKING_REQUEST: '/booking-request',
+    INITIATE_PAYMENT: '/sslcommerz_payment/initiate',
+
 }
