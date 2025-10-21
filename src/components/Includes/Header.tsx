@@ -121,6 +121,9 @@ export default function Header() {
                     <Link href="/dashboard" className="block px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer">
                       Dashboard
                     </Link>
+                    <Link href="/dashboard/profile" className="block px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer">
+                      Change Password
+                    </Link>
                     <button
                       onClick={handleLogout}
                       className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer"
