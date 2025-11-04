@@ -23,7 +23,7 @@ export default function LoginForm() {
     e.preventDefault();
     try {
       const userData = await login({ email, password }).unwrap();
-      console.log(userData);
+      // console.log(userData);
 
       if (userData.success) {
         dispatch(setCredentials({

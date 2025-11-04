@@ -34,7 +34,7 @@ export default function Callback({ params }: CallbackPageProps) {
 
       if (code) {
         try {
-          const response = await fetch(`${BASE_API_URL}/social-login/${provider}?version=1`, {
+          const response = await fetch(`${BASE_API_URL}/social-login/${provider}?version=2`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
