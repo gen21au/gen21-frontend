@@ -8,6 +8,22 @@ import { Address, CreateAddressRequest, UpdateAddressRequest, AddressResponse } 
 import { BookingRequestPayload, BookingResponse, InitiatePaymentResponse, PaymentStatusResponse } from '@/services/bookingService';
 import { API_ENDPOINTS, BASE_API_URL } from "@/utils/api_endpoints";
 
+interface CustomPageResponse {
+  success: boolean;
+  data: {
+    id: number;
+    country_id: number;
+    title: { en: string };
+    slug: string;
+    content: { en: string };
+    published: number;
+    created_at: string;
+    updated_at: string;
+    custom_fields: Record<string, unknown>[];
+  };
+  message: string;
+}
+
 
 export const apiSlice = createApi({
   reducerPath: "api",
@@ -195,6 +211,11 @@ export const apiSlice = createApi({
     getPaymentStatus: builder.query<PaymentStatusResponse, { bookingId: string; token: string }>({
       query: ({ bookingId, token }) => `${API_ENDPOINTS.PAYMENT_STATUS}/${bookingId}?api_token=${token}`,
     }),
+    // Custom Page endpoint
+    getCustomPage: builder.query<CustomPageResponse['data'], string>({
+      query: (slug) => `${API_ENDPOINTS.CUSTOM_PAGE}/${slug}?version=2`,
+      transformResponse: (response: CustomPageResponse) => response.data,
+    }),
   }),
 });
 
@@ -223,4 +244,5 @@ export const {
   useCreateBookingRequestMutation,
   useInitiatePaymentMutation,
   useGetPaymentStatusQuery,
+  useGetCustomPageQuery,
  } = apiSlice;
