@@ -34,7 +34,7 @@ export class TokenValidation {
     }
 
     try {
-      const response = await fetch(`${BASE_API_URL}${API_ENDPOINTS.USER_PROFILE}?token=${token}`, {
+      const response = await fetch(`${BASE_API_URL}${API_ENDPOINTS.USER_PROFILE}?api_token=${token}`, {
         method: 'GET',
         // headers: {
         //   'Authorization': `Bearer ${token}`,
