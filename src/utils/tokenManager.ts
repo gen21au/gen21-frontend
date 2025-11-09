@@ -50,7 +50,7 @@ export class TokenManager {
     const result = await TokenValidation.validateToken(token);
     return {
       isValid: result.isValid,
-      user: result.user,
+      user: result.data,
       error: result.error,
     };
   }

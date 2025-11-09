@@ -6,7 +6,9 @@ import { useDispatch } from 'react-redux';
 import { setCredentials } from '@/store/authSlice';
 import { TokenManager } from '@/utils/tokenManager';
 import { TokenValidation } from '@/utils/tokenValidation';
+import { getMediaUrl } from '@/helper/media.helper';
 import Spinner from '@/components/Common/Spinner';
+import { TokenValidationResult } from '@/types/auth';
 
 export default function SocialLoginPage() {
   const router = useRouter();
@@ -31,23 +33,29 @@ export default function SocialLoginPage() {
         // Validate the token using the API
         const validationResult = await TokenValidation.validateToken(token);
 
-        if (validationResult.isValid && validationResult.user) {
-          // Force login - set credentials in Redux store
-          const userWithNumberId = {
-            ...validationResult.user,
-            id: parseInt(validationResult.user.id, 10),
-            avatarUrl: validationResult.user.avatarUrl ?? '/images/avatar.png'
-          };
+        if (validationResult.isValid && validationResult.data) {
+          const userData = validationResult.data; // Type assertion needed due to API response structure
 
           dispatch(setCredentials({
-            user: userWithNumberId,
-            accessToken: token,
+            user: {
+              id: userData.id,
+              name: userData.name,
+              email: userData.email,
+              role: userData.roles && Array.isArray(userData.roles) && userData.roles.length > 0 ? userData.roles[0].name : 'user',
+              avatarUrl: getMediaUrl(userData, "avatar", "thumb", "/images/avatar.png"),
+            },
+            accessToken: userData.api_token as string,
             isAuthenticated: true,
           }));
 
           // Store tokens in localStorage
-          TokenManager.setAccessToken(token);
-          TokenManager.setUser(userWithNumberId);
+          TokenManager.setTokens(userData.api_token as string, {
+            id: userData.id,
+            name: userData.name,
+            email: userData.email,
+            role: userData.roles && Array.isArray(userData.roles) && userData.roles.length > 0 ? userData.roles[0].name : 'user',
+            avatarUrl: getMediaUrl(userData, "avatar", "thumb", "/images/avatar.png"),
+          });
 
           setMessage('Login successful! Redirecting to dashboard...');
           setTimeout(() => {

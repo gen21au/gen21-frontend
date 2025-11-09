@@ -1,18 +1,22 @@
+import { User } from "@/types/auth";
 import { API_ENDPOINTS, BASE_API_URL } from "./api_endpoints";
 import { TokenManager } from "./tokenManager";
 
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  role: string;
-  avatarUrl: string;
-}
+// interface User {
+//   id: number;
+//   name: string;
+//   email: string;
+//   role: string;
+//   avatarUrl: string;
+//   api_token: string;
+//   [key: string]: any;
+
+// }
 
 interface TokenValidationResult {
   isValid: boolean;
-  user?: User;
   error?: string;
+  data?: User;
 }
 
 export class TokenValidation {
@@ -44,7 +48,8 @@ export class TokenValidation {
 
       if (response.ok) {
         const user = await response.json();
-        return { isValid: true, user };
+
+        return { isValid: true, data: user?.data };
       } else {
         return { isValid: false, error: 'Token validation failed' };
       }
@@ -60,6 +65,6 @@ export class TokenValidation {
 
   static async getUserFromToken(token: string): Promise<User | null> {
     const result = await this.validateToken(token);
-    return result.user || null;
+    return result.data || null;
   }
 }

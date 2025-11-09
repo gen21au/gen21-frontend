@@ -121,7 +121,13 @@ export class AuthService {
   // Get user from token (async)
   static async getUserFromToken(): Promise<{id: string; avatarUrl: string} | null> {
     const token = this.getAccessToken();
-    return token ? await TokenValidation.getUserFromToken(token) : null;
+    if (!token) return null;
+
+    const user = await TokenValidation.getUserFromToken(token);
+    return user ? {
+      id: user.id.toString(),
+      avatarUrl: user.avatarUrl || 'images/avatar.png'
+    } : null;
   }
 
   // Initialize auth state from storage (async)
@@ -168,12 +174,12 @@ export class AuthService {
     if (!token) return false;
 
     const validationResult = await TokenValidation.validateToken(token);
-    if (validationResult.isValid && validationResult.user) {
+    if (validationResult.isValid && validationResult.data) {
       // Convert id from string to number to match the expected User type
       const userWithNumberId = {
-        ...validationResult.user,
-        id: parseInt(validationResult.user.id, 10),
-        avatarUrl: validationResult.user.avatarUrl ?? 'images/avatar.png' // Default avatar image
+        ...validationResult.data,
+        id: typeof validationResult.data.id === 'string' ? parseInt(validationResult.data.id, 10) : validationResult.data.id,
+        avatarUrl: validationResult.data.avatarUrl ?? 'images/avatar.png' // Default avatar image
       };
       store.dispatch(updateUser(userWithNumberId));
       return true;

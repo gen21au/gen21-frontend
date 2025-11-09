@@ -80,3 +80,9 @@ export interface UpdateProfileRequest {
   avatar?: File | null; // Make avatar optional and allow null
   api_token: string;
 }
+
+export interface TokenValidationResult {
+  isValid: boolean;
+  error?: string;
+  data?: User;
+}
