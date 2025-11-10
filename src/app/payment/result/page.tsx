@@ -4,7 +4,7 @@ import { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store/store';
-import { useGetPaymentStatusQuery } from '@/store/apiSlice';
+import { useGetPaymentStatusQuery, useSendRequestMutation } from '@/store/apiSlice';
 import toast from 'react-hot-toast';
 
 export default function PaymentResultPage() {
@@ -13,12 +13,16 @@ export default function PaymentResultPage() {
   const [bookingId, setBookingId] = useState<string>('');
   const [status, setStatus] = useState<string>('');
   const initialToastShownRef = useRef<boolean>(false);
+  const sendRequestCalledRef = useRef<boolean>(false);
 
   // Get payment status
   const { data: paymentStatus, isLoading } = useGetPaymentStatusQuery(
     { bookingId, token: accessToken || '' },
     { skip: !bookingId || !accessToken }
   );
+
+  // Send request mutation
+  const [sendRequest, { isLoading: isSendingRequest }] = useSendRequestMutation();
 
   useEffect(() => {
     // Get query parameters from URL
@@ -49,9 +53,33 @@ export default function PaymentResultPage() {
     if (paymentStatus) {
       if (paymentStatus.success && paymentStatus.data) {
         const actualStatus = paymentStatus.data.status;
+        const isRequested = paymentStatus.data.is_requested;
+        const orderId = paymentStatus.data.order_id;
 
         if (actualStatus === 'completed') {
           toast.success('Payment completed successfully!');
+
+          // Check if status is completed and is_requested is 0, then call send-request API
+          if (isRequested === 0 && orderId && !sendRequestCalledRef.current) {
+            sendRequestCalledRef.current = true; // Prevent multiple calls
+            sendRequest({
+              orderId: orderId.toString(),
+              token: accessToken || ''
+            })
+              .unwrap()
+              .then((result) => {
+                if (result.success) {
+                  toast.success('Service request sent successfully!');
+                } else {
+                  toast.error('Failed to send service request. Please contact support.');
+                }
+              })
+              .catch((error) => {
+                console.error('Send request error:', error);
+                toast.error('Failed to send service request. Please contact support.');
+              });
+          }
+
           // Redirect to dashboard or booking details
           // setTimeout(() => {
           //   router.push('/dashboard/orders');
@@ -67,7 +95,7 @@ export default function PaymentResultPage() {
         toast.error('Failed to verify payment status. Please contact support.');
       }
     }
-  }, [paymentStatus, router]);
+  }, [paymentStatus, router, sendRequest, accessToken]);
 
   if (isLoading) {
     return (

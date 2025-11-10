@@ -211,6 +211,13 @@ export const apiSlice = createApi({
     getPaymentStatus: builder.query<PaymentStatusResponse, { bookingId: string; token: string }>({
       query: ({ bookingId, token }) => `${API_ENDPOINTS.PAYMENT_STATUS}/${bookingId}?api_token=${token}`,
     }),
+    sendRequest: builder.mutation<{ success: boolean; message: string }, { orderId: string; token: string }>({
+      query: ({ orderId, token }) => ({
+        url: `${API_ENDPOINTS.SEND_REQUEST}?api_token=${token}&version=2`,
+        method: 'POST',
+        body: { order_id: orderId },
+      }),
+    }),
     // Custom Page endpoint
     getCustomPage: builder.query<CustomPageResponse['data'], string>({
       query: (slug) => `${API_ENDPOINTS.CUSTOM_PAGE}/${slug}?version=2`,
@@ -244,5 +251,6 @@ export const {
   useCreateBookingRequestMutation,
   useInitiatePaymentMutation,
   useGetPaymentStatusQuery,
+  useSendRequestMutation,
   useGetCustomPageQuery,
  } = apiSlice;

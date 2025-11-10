@@ -57,6 +57,8 @@ export interface PaymentStatusResponse {
     amount: string;
     currency: string;
     type: string;
+    is_requested: number;
+    order_id: number;
   };
   message?: string;
 }
