@@ -57,6 +57,7 @@ export default function ServiceGallery({ images }: { images: string[] }) {
                 alt={`Service image ${i + 1}`}
                 fill
                 className="object-cover"
+                unoptimized
               />
             </button>
           ))}

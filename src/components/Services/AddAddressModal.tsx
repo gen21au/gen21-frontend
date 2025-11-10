@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useCreateAddressMutation } from '@/store/apiSlice';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store/store';
@@ -20,10 +20,45 @@ export default function AddAddressModal({ isOpen, onClose, onAddressAdded }: Add
 
   const [formData, setFormData] = useState({
     address: '',
-    latitude: '',
-    longitude: '',
+    latitude: '0',
+    longitude: '0',
     description: '',
   });
+
+  // Get current location when modal opens
+  useEffect(() => {
+    if (isOpen) {
+      const getCurrentLocation = () => {
+        if (!navigator.geolocation) {
+          toast.error('Geolocation is not supported by this browser.');
+          return;
+        }
+
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const { latitude, longitude } = position.coords;
+            setFormData(prev => ({
+              ...prev,
+              latitude: latitude.toFixed(6),
+              longitude: longitude.toFixed(6),
+            }));
+          },
+          (error) => {
+            console.error('Error getting location:', error);
+            toast.error('Unable to get your current location. Coordinates will be set to 0.');
+            // Keep default values of '0'
+          },
+          {
+            enableHighAccuracy: true,
+            timeout: 10000,
+            maximumAge: 300000, // 5 minutes
+          }
+        );
+      };
+
+      getCurrentLocation();
+    }
+  }, [isOpen]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -66,8 +101,8 @@ export default function AddAddressModal({ isOpen, onClose, onAddressAdded }: Add
       toast.success('Address added successfully!');
       setFormData({
         address: '',
-        latitude: '',
-        longitude: '',
+        latitude: '0',
+        longitude: '0',
         description: '',
       });
       onAddressAdded?.();
