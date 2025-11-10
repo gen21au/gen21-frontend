@@ -68,7 +68,7 @@ export default function PaymentResultPage() {
             })
               .unwrap()
               .then((result) => {
-                if (result.success) {
+                if (result.channel_name) {
                   toast.success('Service request sent successfully!');
                 } else {
                   toast.error('Failed to send service request. Please contact support.');

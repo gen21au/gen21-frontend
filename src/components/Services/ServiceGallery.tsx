@@ -15,6 +15,7 @@ export default function ServiceGallery({ images }: { images: string[] }) {
           alt="Main service image"
           fill
           className="object-cover"
+          unoptimized
           priority
         />
         

@@ -211,7 +211,7 @@ export const apiSlice = createApi({
     getPaymentStatus: builder.query<PaymentStatusResponse, { bookingId: string; token: string }>({
       query: ({ bookingId, token }) => `${API_ENDPOINTS.PAYMENT_STATUS}/${bookingId}?api_token=${token}`,
     }),
-    sendRequest: builder.mutation<{ success: boolean; message: string }, { orderId: string; token: string }>({
+    sendRequest: builder.mutation<{ channel_name: string; message: string }, { orderId: string; token: string }>({
       query: ({ orderId, token }) => ({
         url: `${API_ENDPOINTS.SEND_REQUEST}?api_token=${token}&version=2`,
         method: 'POST',
