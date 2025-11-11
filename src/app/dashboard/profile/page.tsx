@@ -87,22 +87,23 @@ export default function ProfilePage() {
     }
 
     if (avatarFile) {
+      // Send profile data first
       const formData = new FormData();
-      formData.append('avatar', avatarFile);
-      // Append other profile data to FormData if needed, or send separately
-      // For simplicity, assuming avatar is sent as a separate update or combined with other fields if API supports it
-      // For now, we'll send profile data and avatar separately if both are present.
-      // If the API expects a single multipart/form-data for all updates, this logic needs adjustment.
-      // Assuming API can handle partial updates for profile and a separate endpoint for avatar or a combined multipart form.
-      // Given the instruction to use ONE API and mutation, we'll combine all into FormData.
-      for (const key in combinedData) {
-        if (Object.prototype.hasOwnProperty.call(combinedData, key)) {
-          const value = combinedData[key];
-          if (value !== undefined && value !== null) {
-            formData.append(key, String(value));
-          }
-        }
+      formData.append('name', profileFormData.name);
+      formData.append('email', profileFormData.email);
+      formData.append('phone_number', profileFormData.phone_number);
+      formData.append('address', profileFormData.address);
+      formData.append('bio', profileFormData.bio);
+
+      if (passwordFormData.password) {
+        formData.append('password', passwordFormData.password);
+        formData.append('password_confirmation', passwordFormData.password_confirmation);
       }
+
+      if (avatarFile) {
+        formData.append('avatar', avatarFile);
+      }
+
       await updateProfile({ id: user.id, data: formData, token });
     } else {
       await updateProfile({ id: user.id, data: combinedData, token });
@@ -204,6 +205,7 @@ export default function ProfilePage() {
         {/* Password Update Fields */}
         <div className="mt-6">
           <h2 className="text-xl font-semibold mb-2">Update Password</h2>
+          <p className="text-sm text-gray-600 mb-4">Leave the password fields blank if you do not wish to change your current password.</p>
           <div>
             <label htmlFor="password" className="block text-sm font-medium text-gray-700">New Password</label>
             <input

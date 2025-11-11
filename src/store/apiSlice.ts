@@ -123,13 +123,10 @@ export const apiSlice = createApi({
     }),
     updateProfile: builder.mutation<User, { id: number; data: Partial<User> | FormData; token: string }>({
       query: ({ id, data, token }) => {
-        const isFormData = data instanceof FormData;
         return {
           url: `${API_ENDPOINTS.PROFILE_UPDATE}/${id}?api_token=${token}`,
           method: 'POST',
           body: data,
-          // If it's FormData, set content-type to undefined so browser sets it to multipart/form-data
-          headers: isFormData ? { 'Content-Type': 'undefined' } : undefined,
         };
       },
       invalidatesTags: ['User'], // Invalidate 'User' tag on update
