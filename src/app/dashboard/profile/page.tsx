@@ -23,6 +23,7 @@ export default function ProfilePage() {
   });
 
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const [passwordFormData, setPasswordFormData] = useState({
     password: '',
     password_confirmation: '',
@@ -41,16 +42,28 @@ export default function ProfilePage() {
   }, [currentUser]);
 
   useEffect(() => {
+    return () => {
+      if (avatarPreview) {
+        URL.revokeObjectURL(avatarPreview);
+      }
+    };
+  }, [avatarPreview]);
+
+  useEffect(() => {
     if (isSuccess) {
       toast.success('Profile updated successfully!');
       setPasswordFormData({ password: '', password_confirmation: '' }); // Clear password fields on success
       setAvatarFile(null); // Clear avatar file on success
+      if (avatarPreview) {
+        URL.revokeObjectURL(avatarPreview);
+        setAvatarPreview(null);
+      }
     }
     if (isError) {
       console.error('Failed to update profile:', updateError);
       toast.error('Failed to update profile.');
     }
-  }, [isSuccess, isError, updateError]);
+  }, [isSuccess, isError, updateError, avatarPreview]);
 
   const handleProfileChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -64,7 +77,11 @@ export default function ProfilePage() {
 
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      setAvatarFile(e.target.files[0]);
+      const file = e.target.files[0];
+      setAvatarFile(file);
+      // Create preview URL
+      const previewUrl = URL.createObjectURL(file);
+      setAvatarPreview(previewUrl);
     }
   };
 
@@ -184,7 +201,7 @@ export default function ProfilePage() {
         <div className="mt-6">
           <h2 className="text-xl font-semibold mb-2">Update Avatar</h2>
             <div className="mb-4">
-              <img src={getMediaUrl(currentUser, "avatar", "thumb", "/images/avatar.png")} alt="Current Avatar" className="w-24 h-24 rounded-full object-cover" />
+              <img src={avatarPreview || getMediaUrl(currentUser, "avatar", "thumb", "/images/avatar.png")} alt="Avatar" className="w-24 h-24 rounded-full object-cover" />
             </div>
           <label htmlFor="avatar" className="block text-sm font-medium text-gray-700">Avatar</label>
           <input
