@@ -8,9 +8,9 @@ import { useSelector } from 'react-redux';
 import { RootState } from '@/store/store';
 
 interface ResetPasswordPageProps {
-  params: {
+  params: Promise<{
     token: string;
-  };
+  }>;
 }
 
 export default function ResetPasswordPage({ params }: ResetPasswordPageProps) {
@@ -27,5 +27,5 @@ export default function ResetPasswordPage({ params }: ResetPasswordPageProps) {
     checkAuth();
   }, [router, isAuthenticated]);
 
-  return <ResetPasswordForm token={params.token} />;
+  return <ResetPasswordForm params={params} />;
 }

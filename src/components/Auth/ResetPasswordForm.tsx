@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -11,10 +11,14 @@ import toast from 'react-hot-toast';
 import Spinner from '@/components/Common/Spinner';
 
 interface ResetPasswordFormProps {
-  token: string;
+  params: Promise<{
+    token: string;
+  }>;
 }
 
-export default function ResetPasswordForm({ token }: ResetPasswordFormProps) {
+export default function ResetPasswordForm({ params }: ResetPasswordFormProps) {
+  const [token, setToken] = useState<string>('');
+  const [loading, setLoading] = useState(true);
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -23,6 +27,22 @@ export default function ResetPasswordForm({ token }: ResetPasswordFormProps) {
   const dispatch = useDispatch();
 
   const [resetPassword, { isLoading, error }] = useResetPasswordMutation();
+
+  useEffect(() => {
+    const getParams = async () => {
+      try {
+        const resolvedParams = await params;
+        setToken(resolvedParams.token);
+      } catch (error) {
+        console.error('Error resolving params:', error);
+        toast.error('Invalid reset link');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    getParams();
+  }, [params]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -63,6 +83,32 @@ export default function ResetPasswordForm({ token }: ResetPasswordFormProps) {
       toast.error(errorMessage);
     }
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-indigo-50 py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-md w-full space-y-8">
+          <div className="text-center">
+            <Link href="/" className="inline-block">
+              <Image
+                src="/logo.png"
+                alt="GEN21 Logo"
+                width={180}
+                height={45}
+                className="mx-auto mb-8"
+              />
+            </Link>
+            <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
+              <div className="text-center">
+                <Spinner size="lg" />
+                <p className="mt-4 text-gray-600">Loading...</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   if (isSubmitted) {
     return (
