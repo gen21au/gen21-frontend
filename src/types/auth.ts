@@ -52,6 +52,7 @@ export interface ForgotPasswordRequest {
 export interface ResetPasswordRequest {
   token: string;
   password: string;
+  confirm_password: string;
 }
 
 export interface LogoutResponse {

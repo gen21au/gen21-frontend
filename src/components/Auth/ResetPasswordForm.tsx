@@ -58,7 +58,7 @@ export default function ResetPasswordForm({ params }: ResetPasswordFormProps) {
     }
 
     try {
-      const result = await resetPassword({ token, password }).unwrap();
+      const result = await resetPassword({ token, password, confirm_password: confirmPassword }).unwrap();
 
       if (result.success) {
         // Set credentials with the new api_token
