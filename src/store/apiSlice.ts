@@ -87,7 +87,7 @@ export const apiSlice = createApi({
       query: ({ token, password, confirm_password }) => ({
         url: API_ENDPOINTS.RESET_PASSWORD,
         method: 'POST',
-        body: { token, password, confirm_password },
+        body: { token, password, password_confirmation: confirm_password },
       }),
     }),
     validateToken: builder.query<User, UserRequest>({
