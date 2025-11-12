@@ -5,8 +5,8 @@ export const API_ENDPOINTS = {
     //Auth
     LOGIN: '/login?version=2',
     REGISTER: '/register?version=2',
-    FORGOT_PASSWORD: '/forgot-password?version=2',
-    RESET_PASSWORD: '/send_reset_link_email?version=2',
+    FORGOT_PASSWORD: '/password-reset',
+    RESET_PASSWORD: '/submit-password-reset',
     USER_PROFILE: '/user',
     LOGOUT: '/logout?version=2',
 

@@ -76,14 +76,14 @@ export const apiSlice = createApi({
         body: data,
       }),
     }),
-    forgotPassword: builder.mutation<{ message: string }, ForgotPasswordRequest>({
+    forgotPassword: builder.mutation<{ success: boolean, message: string }, ForgotPasswordRequest>({
       query: (body) => ({
         url: API_ENDPOINTS.FORGOT_PASSWORD,
         method: 'POST',
         body,
       }),
     }),
-    resetPassword: builder.mutation<{ message: string }, ResetPasswordRequest>({
+    resetPassword: builder.mutation<{ success: boolean; message: string; data: { api_token: string } }, ResetPasswordRequest>({
       query: ({ token, password }) => ({
         url: API_ENDPOINTS.RESET_PASSWORD,
         method: 'POST',
