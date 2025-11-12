@@ -84,10 +84,10 @@ export const apiSlice = createApi({
       }),
     }),
     resetPassword: builder.mutation<{ success: boolean; message: string; data: { api_token: string } }, ResetPasswordRequest>({
-      query: ({ token, password }) => ({
+      query: ({ token, password, confirm_password }) => ({
         url: API_ENDPOINTS.RESET_PASSWORD,
         method: 'POST',
-        body: { token, password },
+        body: { token, password, confirm_password },
       }),
     }),
     validateToken: builder.query<User, UserRequest>({
