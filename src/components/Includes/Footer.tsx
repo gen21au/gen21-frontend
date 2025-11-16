@@ -74,7 +74,7 @@ export default function Footer() {
         </div>
       </div>
       <div className="w-full p-4">
-        <Image src="/images/payment-banner.png" alt="payment-banner.png" width={9561} height={31} className="w-full h-auto" />
+        <Image src="/images/payment-banner.png" alt="payment-banner.png" width={9561} height={31} className="w-full h-auto rounded-lg" />
       </div>
     </footer>
   );
