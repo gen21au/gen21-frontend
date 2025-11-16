@@ -1,8 +1,9 @@
+import Image from 'next/image';
 import Link from 'next/link';
 
 export default function Footer() {
   return (
-    <footer className="bg-gray-900 text-white py-12">
+    <footer className="bg-gray-900 text-white pt-12 pb-1">
       <div className="max-w-7xl mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8">
           <div className="space-y-4">
@@ -39,13 +40,14 @@ export default function Footer() {
             <ul className="space-y-2">
               <li><Link href="/terms-conditions" className="text-gray-400 hover:text-white">Terms of Service</Link></li>
               <li><Link href="/privacy-policy" className="text-gray-400 hover:text-white">Privacy Policy</Link></li>
+              <li><Link href="/return-refund-policy" className="text-gray-400 hover:text-white">Return and Refund Policy</Link></li>
               <li><Link href="/faq" className="text-gray-400 hover:text-white">FAQ</Link></li>
             </ul>
           </div>
         </div>
 
         <div className="border-t border-gray-800 mt-12 pt-8 text-center text-gray-400">
-          <p>© {new Date().getFullYear()} Gen21. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} Gen21. All rights reserved. Trade License No. 2025-01916</p>
           <p className="mt-2">Dhaka, Bangladesh</p>
           <div className="flex justify-center space-x-4 mt-4">
             <a href="https://www.facebook.com/gen21.au" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white">
@@ -70,6 +72,9 @@ export default function Footer() {
             </a>
           </div>
         </div>
+      </div>
+      <div className="w-full p-4">
+        <Image src="/images/payment-banner.png" alt="payment-banner.png" width={9561} height={31} className="w-full h-auto" />
       </div>
     </footer>
   );

@@ -10,6 +10,7 @@ import AddAddressModal from './AddAddressModal';
 import toast from 'react-hot-toast';
 import { ServiceType } from '@/types/services';
 import { timeSlots } from '@/utils/constants';
+import Link from 'next/link';
 
 interface OrderServiceProps {
   service: ServiceType;
@@ -29,6 +30,7 @@ export default function OrderForm( { service }: OrderServiceProps) {
   });
   const [couponApplied, setCouponApplied] = useState(false);
   const [couponDiscount, setCouponDiscount] = useState(0);
+  const [agreeToTerms, setAgreeToTerms] = useState(false);
 
   // Fetch addresses if authenticated
   const { data: addresses = [], isLoading: addressesLoading } = useGetAddressesQuery(accessToken || '', {
@@ -97,6 +99,11 @@ export default function OrderForm( { service }: OrderServiceProps) {
 
     if (!isAuthenticated) {
       setShowLoginModal(true);
+      return;
+    }
+
+    if (!agreeToTerms) {
+      toast.error('Please agree to the Terms & Conditions, Privacy Policy, and Return & Refund Policy');
       return;
     }
 
@@ -364,6 +371,33 @@ export default function OrderForm( { service }: OrderServiceProps) {
               placeholder="Any special instructions or requirements"
               rows={3}
             />
+          </div>
+
+          {/* Terms and Conditions Checkbox */}
+          <div className="flex items-start">
+            <input
+              type="checkbox"
+              id="agreeToTerms"
+              checked={agreeToTerms}
+              onChange={(e) => setAgreeToTerms(e.target.checked)}
+              className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded mt-1"
+              required
+            />
+            <label htmlFor="agreeToTerms" className="ml-2 block text-sm text-gray-700">
+              I agree to the{' '}
+              <Link href="/terms-conditions" className="text-blue-600 hover:text-blue-800 underline">
+                Terms & Conditions
+              </Link>
+              ,{' '}
+              <Link href="/privacy-policy" className="text-blue-600 hover:text-blue-800 underline">
+                Privacy Policy
+              </Link>
+              , and{' '}
+              <Link href="/return-refund-policy" className="text-blue-600 hover:text-blue-800 underline">
+                Return & Refund Policy
+              </Link>
+              .
+            </label>
           </div>
 
           {/* Submit Button */}

@@ -55,7 +55,7 @@ export default function ContactPage() {
                     </svg>
                     <div>
                       <h3 className="font-medium text-gray-900">Address</h3>
-                      <p className="text-gray-600">123 Service Lane<br/>Sydney NSW 2000</p>
+                      <p className="text-gray-600">61/1 KA,BOLASHPUR ROAD, BOLASHPUR, <br/> Mymensingh Sadar, District- Mymensingh</p>
                     </div>
                   </div>
                   <div className="flex items-start space-x-3">
@@ -64,7 +64,7 @@ export default function ContactPage() {
                     </svg>
                     <div>
                       <h3 className="font-medium text-gray-900">Phone</h3>
-                      <p className="text-gray-600">+61 2 9876 5432</p>
+                      <p className="text-gray-600">+880 1688-315010</p>
                     </div>
                   </div>
                   <div className="flex items-start space-x-3">
