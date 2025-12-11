@@ -146,7 +146,7 @@ const CategoryPage: React.FC<CategoryPageProps> = ({ categoryId }) => {
                 </svg>
               </div>
               <h3 className="text-xl font-semibold text-gray-900 mb-2">No Services Available</h3>
-              <p className="text-gray-600">We're currently updating our services. Please check back soon!</p>
+              <p className="text-gray-600">We&apos;re currently updating our services. Please check back soon!</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
