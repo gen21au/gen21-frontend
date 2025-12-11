@@ -1,7 +1,15 @@
+'use client';
+
 import Image from 'next/image';
 import Link from 'next/link';
+import { useGetFeatureServicesQuery } from '@/store/apiSlice';
+import { generateSlug } from '@/helper/common.helper';
 
 export default function Footer() {
+  const { data: featureServices, isLoading } = useGetFeatureServicesQuery();
+
+  // Get latest 4 services
+  const latestServices = featureServices?.slice(0, 4) || [];
   return (
     <footer className="bg-gray-900 text-white pt-12 pb-1">
       <div className="max-w-7xl mx-auto px-4">
@@ -17,10 +25,26 @@ export default function Footer() {
           <div className="space-y-4">
             <h4 className="text-lg font-semibold">Services</h4>
             <ul className="space-y-2">
-              <li><Link href="/plumbing" className="text-gray-400 hover:text-white">Plumbing</Link></li>
-              <li><Link href="/electrical" className="text-gray-400 hover:text-white">Electrical</Link></li>
-              <li><Link href="/cleaning" className="text-gray-400 hover:text-white">Cleaning</Link></li>
-              <li><Link href="/ac-repair" className="text-gray-400 hover:text-white">AC Repair</Link></li>
+              {isLoading ? (
+                // Loading skeleton
+                <>
+                  <li className="animate-pulse"><div className="h-4 bg-gray-700 rounded w-24"></div></li>
+                  <li className="animate-pulse"><div className="h-4 bg-gray-700 rounded w-20"></div></li>
+                  <li className="animate-pulse"><div className="h-4 bg-gray-700 rounded w-28"></div></li>
+                  <li className="animate-pulse"><div className="h-4 bg-gray-700 rounded w-22"></div></li>
+                </>
+              ) : (
+                latestServices.map((service) => (
+                  <li key={service.id}>
+                    <Link
+                      href={`/services/${generateSlug(service.name.en, service.id)}`}
+                      className="text-gray-400 hover:text-white"
+                    >
+                      {service.name.en}
+                    </Link>
+                  </li>
+                ))
+              )}
             </ul>
           </div>
 

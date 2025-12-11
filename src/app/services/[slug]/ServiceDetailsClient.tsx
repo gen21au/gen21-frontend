@@ -100,6 +100,12 @@ export default function ServiceDetailsClient({ serviceId, initialService }: Serv
           {/* Left column - Service details */}
           <div className="lg:col-span-2 space-y-8">
             <ServiceGallery images={service.images} />
+
+            {/* Order form for mobile - appears just below the main image */}
+            <div className="block lg:hidden">
+              <OrderForm service={service} />
+            </div>
+
             <ServiceDetails
               title={service.title}
               price={service.price}
@@ -125,8 +131,8 @@ export default function ServiceDetailsClient({ serviceId, initialService }: Serv
             />
           </div>
 
-          {/* Right column - Order form */}
-          <div className="lg:col-span-1">
+          {/* Right column - Order form for desktop */}
+          <div className="hidden lg:block lg:col-span-1">
             <div className="sticky top-8">
               <OrderForm service={service} />
 
