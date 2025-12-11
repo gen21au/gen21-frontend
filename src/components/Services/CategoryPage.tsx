@@ -106,6 +106,104 @@ const CategoryPage: React.FC<CategoryPageProps> = ({ categoryId }) => {
         </div>
       </div>
 
+      {/* Mobile Layout: Category Overview and Available Services */}
+      <div className="block lg:hidden container mx-auto px-4 py-8">
+        {/* Category Overview - Mobile */}
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
+          <h3 className="font-bold text-lg mb-4 text-gray-900">Category Overview</h3>
+          <div className="space-y-3">
+            <div className="flex justify-between items-center">
+              <span className="text-gray-600">Total Services</span>
+              <span className="font-semibold text-blue-600">{categoryServices.length}</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-gray-600">Category</span>
+              <span className="font-semibold text-gray-900">{category.name.en}</span>
+            </div>
+            {category.featured && (
+              <div className="flex justify-between items-center">
+                <span className="text-gray-600">Status</span>
+                <span className="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-medium">Featured</span>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Available Services - Mobile */}
+        <div className="mb-8">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-3xl font-bold text-gray-900">Available Services</h2>
+            <div className="text-sm text-gray-600 bg-gray-100 px-3 py-1 rounded-full">
+              {categoryServices.length} services
+            </div>
+          </div>
+
+          {categoryServices.length === 0 ? (
+            <div className="bg-white p-12 rounded-xl shadow-sm border border-gray-100 text-center">
+              <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-5.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">No Services Available</h3>
+              <p className="text-gray-600">We're currently updating our services. Please check back soon!</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {categoryServices.map((service) => (
+                <Link
+                  href={`/services/${generateSlug(service.title, service.id)}`}
+                  key={service.id}
+                  className="group"
+                >
+                  <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden transition-all duration-300 hover:shadow-lg hover:border-blue-200 h-full flex flex-col">
+                    <div className="relative">
+                      <div className="h-48 overflow-hidden">
+                        <Image
+                          src={service.image || '/images/default-service.png'}
+                          alt={service.title}
+                          width={400}
+                          height={300}
+                          unoptimized
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        />
+                      </div>
+                      {/* Price Badge */}
+                      <div className="absolute top-4 right-4 bg-white px-3 py-1 rounded-full shadow-md">
+                        <span className="font-bold text-blue-600">৳{service.price}</span>
+                      </div>
+                    </div>
+
+                    <div className="p-6 flex flex-col flex-grow">
+                      <h3 className="font-semibold text-lg mb-3 text-gray-900 group-hover:text-blue-600 transition-colors line-clamp-2">
+                        {service.title}
+                      </h3>
+
+                      <p className="text-gray-600 text-sm mb-4 flex-grow line-clamp-3">
+                        {stripHtml(service.description || '').slice(0, 120)}{stripHtml(service.description || '').length > 120 ? '...' : ''}
+                      </p>
+
+                      <div className="flex items-center justify-between mt-auto pt-4 border-t border-gray-100">
+                        <div className="flex items-center">
+                          <div className="flex text-yellow-400 mr-1">
+                            <span>★</span>
+                          </div>
+                          <span className="text-sm font-medium text-gray-900 mr-1">{service.total_rate}</span>
+                          <span className="text-sm text-gray-500">({service.total_reviews})</span>
+                        </div>
+                        <div className="text-blue-600 font-medium text-sm group-hover:text-blue-700 transition-colors">
+                          View Details →
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+
       {/* Main Content */}
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
@@ -113,7 +211,7 @@ const CategoryPage: React.FC<CategoryPageProps> = ({ categoryId }) => {
           <div className="lg:col-span-1">
             <div className="sticky top-24 space-y-6">
               {/* Category Stats */}
-              <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+              <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 hidden lg:block">
                 <h3 className="font-bold text-lg mb-4 text-gray-900">Category Overview</h3>
                 <div className="space-y-3">
                   <div className="flex justify-between items-center">
@@ -181,7 +279,7 @@ const CategoryPage: React.FC<CategoryPageProps> = ({ categoryId }) => {
             )}
 
             {/* Services Section */}
-            <div className="mb-8">
+            <div className="mb-8 hidden lg:block">
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-3xl font-bold text-gray-900">Available Services</h2>
                 <div className="text-sm text-gray-600 bg-gray-100 px-3 py-1 rounded-full">
